@@ -1,0 +1,30 @@
+{
+  "name": "splitpeasoup.github.io",
+  "version": "1.0.0",
+  "description": "Project Faceit App",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/splitpeasoup/splitpeasoup.github.io.git"
+  },
+  "author": "Caitlin Sweeney , Mitch Hall, Alicia Lycan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/splitpeasoup/splitpeasoup.github.io/issues"
+  },
+  "homepage": "https://github.com/splitpeasoup/splitpeasoup.github.io#readme",
+  "dependencies": {
+    "bcrypt": "^1.0.3",
+    "dotenv": "^5.0.1",
+    "express": "^4.16.3",
+    "heroku": "^0.2.0",
+    "mongoose": "^5.0.12"
+  }
+}
