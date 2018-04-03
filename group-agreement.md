@@ -8,9 +8,8 @@ Alicia Lycan, Mitch Hall, Caitlin Sweeney
 
 * GitHub Project for tasks
 * Slack for quick communication of ideas
-* If a team member can't meet in person, they can resort to Slack or Google Hangout
-* If a team member is feeling overwhelmed, notify team so that others can support
-* If a team member is ahead of task/schedule, notify team to help with other tasks
+* If a team member can't meet in person, communicate with team and figure out plan
+* If a team member is feeling overwhelmed, notify team so that others can support and break task down
 * Constant agreement on task deadlines
 
 ## Conflict Plan
