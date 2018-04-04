@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const User = require('./models/userSchema.js');
 const userRouter = require('./routes/userRouter.js');
 
-mongoose.connect('mongodb://localhost/face');
+mongoose.connect(process.env.MONGODB_URI);
 
 const app = express();
 app.use(express.static('lib'));
@@ -24,7 +24,7 @@ app.use('/api', authRouter);
 //   res.sendFile('index.html');
 // });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 app.listen(PORT, () =>{
   console.log(`listening on ${PORT}`);

@@ -1,7 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/face');
+mongoose.connect(process.env.MONGODB_URI);
 
 const Schema = mongoose.Schema;
 
