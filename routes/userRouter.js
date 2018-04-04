@@ -2,8 +2,13 @@
 
 const express = require('express');
 const User = require('../models/userSchema.js');
+//require('dotenv').config();
+//const APP_KEY = process.env.FACEAPI_KEY;
+//const APP_ID = process.env.FACEAPI_ID;
 
 const userRouter = express.Router();
+
+//https://api-us.faceplusplus.com/facepp/v3/detect?api_key=`${APP_KEY}`api_secret=`${APP_ID}`image_url=https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2015/09/1442313353nasa-small.jpg
 
 userRouter.route('/faces')
   .get((req, res) => {

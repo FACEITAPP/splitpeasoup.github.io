@@ -25,6 +25,15 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.use('/api', userRouter);
 
+var api = new FacePP('FACEAPI_KEY', 'FACE_SECRET');
+
+api.request(method, data, callback)
+api.requestAsync(method, data, callback)
+
+method: API method (e.g. 'detection/detect')
+data: API arguments
+callback: function(error, result) {}
+
 // User.create({name:'test'});
 
 // app.get('/', (req, res) => {
