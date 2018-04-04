@@ -4,6 +4,10 @@
 
 Alicia Lycan, Mitch Hall, Caitlin Sweeney
 
+## Objective
+
+Our group will create an app that will at minimum meet all the project requirements (MVP)
+
 ## Communication Plan
 
 * GitHub Project for tasks
@@ -36,13 +40,12 @@ Alicia Lycan, Mitch Hall, Caitlin Sweeney
 
 ## Git Process
 
-* One additional team member must review any pull request before merging
+* One additional team member must review any pull request before merging, no group member will merge their own pull requests
 * Availability (first to respond) can determine who reviews and submits merge
 
 ## Additional
 
-* Open to various physical locations and alternate meeting times to accommodate everyone's schedule
-* Make sure all team members are getting periods of mental recovery/relaxation
+* Attendance: All group members will be present on campus for every normal class day for the first week of the project. Will re-assess the attendance policy for the second week depending on how the project is progressing
 
 ## Schedule
 

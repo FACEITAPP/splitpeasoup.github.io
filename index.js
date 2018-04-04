@@ -2,24 +2,27 @@
 
 const express = require('express');
 const mongoose = require('mongoose');
-const User = require('./models/schema.js');
+const bodyParser = require('body-parser');
+const User = require('./models/userSchema.js');
+const userRouter = require('./routes/userRouter.js');
 
-const PORT = process.env.PORT || 3000;
+mongoose.connect('mongodb://localhost/face');
 
 const app = express();
 app.use(express.static('lib'));
 
-mongoose.connect('mongodb://localhost/face');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+
+app.use('/api', userRouter);
 
 // User.create({name:'test'});
 
-app.get('/', (req, res) => {
-  res.sendFile('index.html');
-});
-
-// app.post('/api/face', (req, res) => {
-
+// app.get('/', (req, res) => {
+//   res.sendFile('index.html');
 // });
+
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () =>{
   console.log(`listening on ${PORT}`);
