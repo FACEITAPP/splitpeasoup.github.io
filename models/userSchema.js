@@ -6,10 +6,6 @@ mongoose.connect('mongodb://localhost/face');
 const Schema = mongoose.Schema;
 
 const userSchema = Schema({
-  userId: {
-    type: Schema.Types.ObjectId,
-    required: true
-  },
   username: {
     type: String,
     required: true,

@@ -13,8 +13,6 @@ userRouter.route('/faces')
   })
 
   .post((req, res) => {
-    console.log('req', req.body.userId);
-    req.body.userId = req.user._id;
     new User(req.body)
     .save()
     .then(user => res.status(200).send(user))
