@@ -1,21 +1,13 @@
 'use strict';
+require('dotenv').config(); 
 
 const express = require('express');
 const mongoose = require('mongoose');
-
-//require('dotenv').config(); 
-
-//const jwt = require('jsonwebtoken');
-
-//let payload = { username : User, isAdmin: false};
-//let token = jwt.sign(payload, process.env.SECRET);
-
 const bodyParser = require('body-parser');
 const User = require('./models/userSchema.js');
 const userRouter = require('./routes/userRouter.js');
 
-mongoose.connect('mongodb://localhost/face');
-
+mongoose.connect(process.env.MONGODB_URI);
 
 const app = express();
 app.use(express.static('lib'));
@@ -24,6 +16,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.use('/api', userRouter);
+app.use('/api', authRouter);
 
 // User.create({name:'test'});
 
@@ -31,7 +24,7 @@ app.use('/api', userRouter);
 //   res.sendFile('index.html');
 // });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 app.listen(PORT, () =>{
   console.log(`listening on ${PORT}`);
