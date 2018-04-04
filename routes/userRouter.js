@@ -2,13 +2,29 @@
 
 const express = require('express');
 const User = require('../models/userSchema.js');
-//require('dotenv').config();
-//const APP_KEY = process.env.FACEAPI_KEY;
-//const APP_ID = process.env.FACEAPI_ID;
+const express = require('express');
+const multer = require('multer');
+const superagent = require('superagent');
+require('dotenv').config();
+const APP_KEY = process.env.FACEAPI_KEY;
+const APP_ID = process.env.FACEAPI_ID;
 
 const userRouter = express.Router();
+const app = express();
 
-//https://api-us.faceplusplus.com/facepp/v3/detect?api_key=`${APP_KEY}`api_secret=`${APP_ID}`image_url=https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2015/09/1442313353nasa-small.jpg
+const image_url = "https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2015/09/1442313353nasa-small.jpg"
+
+
+userRouter.route('/faces/:id').superagent.post(`https://api-us.faceplusplus.com/facepp/v3/detect?api_key=${APP_KEY}&api_secret=${APP_ID}&image_url=${image_url}`
+).then(result => res.send(result)
+);
+
+userRouter.route('/faces/:id').superagent.post(`https://api-us.faceplusplus.com/facepp/v3/face/setuserid?api_key=${APP_KEY}&api_secret=${APP_ID}&face_token=${FACE_TOKEN}&user_id=${USER_ID}`).then(result => res.send(result));
+
+//app.post('/profile', upload.single('avatar'), function (req, res, next) {
+  // req.file is the `avatar` file
+  // req.body will hold the text fields, if there were any
+//})
 
 userRouter.route('/faces')
   .get((req, res) => {
@@ -23,6 +39,8 @@ userRouter.route('/faces')
     .then(user => res.status(200).send(user))
     .catch(err => res.status(500).send(err.message));
   })
+
+
 
   userRouter.route('/face/:id')
     .get((req, res) => {
