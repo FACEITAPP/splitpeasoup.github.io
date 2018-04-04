@@ -2,7 +2,7 @@
 
 const express = require('express');
 const mongoose = require('mongoose');
-const user = require('/models/user.js');
+
 //require('dotenv').config(); 
 
 //const jwt = require('jsonwebtoken');
@@ -10,9 +10,26 @@ const user = require('/models/user.js');
 //let payload = { username : User, isAdmin: false};
 //let token = jwt.sign(payload, process.env.SECRET);
 
-const app = express();
+const bodyParser = require('body-parser');
+const User = require('./models/userSchema.js');
+const userRouter = require('./routes/userRouter.js');
 
 mongoose.connect('mongodb://localhost/face');
+
+
+const app = express();
+app.use(express.static('lib'));
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+
+app.use('/api', userRouter);
+
+// User.create({name:'test'});
+
+// app.get('/', (req, res) => {
+//   res.sendFile('index.html');
+// });
 
 const PORT = process.env.PORT || 3000;
 
