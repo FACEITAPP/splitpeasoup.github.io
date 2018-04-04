@@ -54,5 +54,5 @@ userSchema.methods.checkPassword = function (password) {
     });
   });
 };
-
+ // adding for commit
 module.exports = User;
