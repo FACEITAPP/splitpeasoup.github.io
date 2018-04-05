@@ -1,4 +1,3 @@
-import { URL } from 'url';
 
 'use strict';
 
@@ -17,14 +16,14 @@ const userSchema = Schema({
     type: String,
     required: true
   },
-  image:
-  {
-    type: File || URL,
-  },
-  facetoken: {
-    type: String,
-    unique: true
-  }
+  // image:
+  // {
+  //   type: File || URL,
+  // },
+  // facetoken: {
+  //   type: String,
+  //   unique: true
+  // }
 });
 
 const User = mongoose.model('User', userSchema);

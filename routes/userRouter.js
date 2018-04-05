@@ -2,25 +2,29 @@
 
 const express = require('express');
 const User = require('../models/userSchema.js');
-const multer = require('multer');
-const express = require('express');
-const superagent = require('superagent');
-require('dotenv').config();
+// const multer = require('multer');
+// const superagent = require('superagent');
 const APP_KEY = process.env.FACEAPI_KEY;
 const APP_ID = process.env.FACEAPI_ID;
-const userRouter = express.Router();
+const userRouter = new express.Router();
 
-const upload = multer({dest : '/face'})
+// const upload = multer({dest : '/face'})
 
-const image_url = "https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2015/09/1442313353nasa-small.jpg";
+// const image_url = "https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2015/09/1442313353nasa-small.jpg";
 const FACE_TOKEN = "38df8830320f8aad58cdedb820788665";
 
 
-userRouter.route('/facesplusplus').superagent.post(`https://api-us.faceplusplus.com/facepp/v3/detect?api_key=${APP_KEY}&api_secret=${APP_ID}&image_url=${image_url}`
-).then(result => result.upload)
-);
+userRouter.route('/facesplusplus')
+  .post((req,res)=> console.log(req.body));
 
-userRouter.route('/facesplusplus').superagent.post(`https://api-us.faceplusplus.com/facepp/v3/face/setuserid?api_key=${APP_KEY}&api_secret=${APP_ID}&face_token=${FACE_TOKEN}&user_id=${USER_ID}`).then(result => res.send(result));
+// 
+  .superagent.post(`https://api-us.faceplusplus.com/facepp/v3/detect?api_key=${APP_KEY}&api_secret=${APP_ID}&image_url=${results.picture}`
+).then(result => console.log(result));
+
+
+
+
+// userRouter.route('/facesplusplus').superagent.post(`https://api-us.faceplusplus.com/facepp/v3/face/setuserid?api_key=${APP_KEY}&api_secret=${APP_ID}&face_token=${FACE_TOKEN}&user_id=${USER_ID}`).then(result => res.send(result));
 
 
 userRouter.route('/faces')
