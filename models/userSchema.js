@@ -1,6 +1,9 @@
 'use strict';
 
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken'); 
+
 mongoose.connect(process.env.MONGODB_URI);
 
 const Schema = mongoose.Schema;
@@ -22,7 +25,6 @@ const userSchema = Schema({
 
 const User = mongoose.model('User', userSchema);
 
-
 userSchema.pre('save', function (next) {
   let user = this;
   if (user.isNew) {
@@ -31,9 +33,9 @@ userSchema.pre('save', function (next) {
       user.password = hash;
       user.passwordHash = hash;
       next();
-    })
+    });
   } else {
-    console.log(user, 'is not new!')
+    console.log('user is not new!')
     next();
   }
 });
@@ -54,6 +56,5 @@ userSchema.methods.checkPassword = function (password) {
     });
   });
 };
- // adding for commit
- // adding another for commit
+
 module.exports = User;

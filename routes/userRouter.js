@@ -8,6 +8,7 @@ const userRouter = express.Router();
 
 userRouter.route('/faces')
   .get(bearerAuth, (req, res) => {
+    console.log('req', req.res);
     User.find({userId: req.user})
     .then(users => res.status(200).send(users))
     .catch(err => res.sendStatus(404).send(err));
