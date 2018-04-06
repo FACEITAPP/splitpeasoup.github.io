@@ -22,23 +22,28 @@ userRouter.post('/faces',(req,res)=> {
   console.log('password', req.body.password);
 
   request.post(app_url)
-    .end(function (err, results) {
+    .then(results => {
       console.log('hi');
-      console.log(results.body);
       console.log('facetoken', results.body.faces[0].face_token);
       return results;
     // if (err) {
     //   console.log('err',err);
     // }
     // console.log('res',res);
-    // done();
-    }).then(()=> {});
-  // .then((results)=> {
-  //   console.log('api results', results);
-  //   new User ({username: req.body.username, password: req.body.password , facetoken: results.body.faces[0].face_token}).save();
-  // })
-  // .then(() => res.status(200))
-  // .catch(err => res.sendStatus(404).send(err))
+    // done();then
+    })
+    .then((results)=> {
+      return User.create({username: req.body.username, password: req.body.password , facetoken: results.body.faces[0].face_token});
+    })
+    .then((user) =>
+    {
+      console.log('then');
+      res.status(200).send(user);
+    } )
+    .catch(err => {
+      console.log('catch');
+      res.sendStatus(404).send(err);
+    });
 
 
 

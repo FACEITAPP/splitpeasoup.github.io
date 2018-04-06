@@ -18,7 +18,7 @@ const userSchema = Schema({
   },
   facetoken: {
     type: String,
-    unique: true
+    unique : true
   }
 });
 
