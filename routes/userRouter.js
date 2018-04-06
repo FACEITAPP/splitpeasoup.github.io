@@ -3,39 +3,38 @@
 const express = require('express');
 const User = require('../models/userSchema.js');
 // const multer = require('multer');
-const superagent = require('superagent');
+const request = require('superagent');
+require('dotenv').config(); 
 const APP_KEY = process.env.FACEAPI_KEY;
-const APP_ID = process.env.FACEAPI_ID;
+const APP_SECRET = process.env.FACEAPI_SECRET;
 const userRouter = new express.Router();
 
-const app = express();
-
-// const upload = multer({dest : '/face'})
+// const upload = multer({dest : '/face', User.face_token : 'faces.face_token'})
 
 // const image_url = "https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2015/09/1442313353nasa-small.jpg";
 const FACE_TOKEN = "38df8830320f8aad58cdedb820788665";
+const app_url = `https://api-us.faceplusplus.com/facepp/v3/detect?api_key=${APP_KEY}&api_secret=${APP_SECRET}&image_url=https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2015/09/1442313353nasa-small.jpg`;
 
-
-app.get('/api/facesplusplus',(req,res)=> {
+userRouter.post('/',(req,res)=> {
   console.log(req.body);
-  superagent.post(`https://api-us.faceplusplus.com/facepp/v3/detect?api_key=${APP_KEY}&api_secret=${APP_ID}&image_url=https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2015/09/1442313353nasa-small.jpg`).end(function (err, res) {
-    if (err) {
-      console.log(err)
-    } else {
-      console.log(res.body)
-    }
-  });
+  console.log('app_key', APP_KEY === undefined);
 
-// app.get('/api/facesplusplus',(req,res)=> {
-//   request
-//   .post('/api/pet')
-//   .send({ name: 'Manny', species: 'cat' }) // sends a JSON post body
-//   .set('X-API-Key', 'foobar')
-//   .set('accept', 'json')
-//   .end((err, res) => {
-//     // Calling the end function will send the request
-//   });
+  request.post(app_url).
+    end(function (err, results) {
+       console.log('hi');
+       console.log(results.body);
+      // if (err) {
+      //   console.log('err',err);
+      // }
+      // console.log('res',res);
+      // done();
+    });
+  
+});
 
+// then(results => {
+//   console.log(results.body)
+// })
 // 
 //   .superagent.post(`https://api-us.faceplusplus.com/facepp/v3/detect?api_key=${APP_KEY}&api_secret=${APP_ID}&image_url=${results.picture}`
 // ).then(result => console.log(result));
