@@ -16,14 +16,10 @@ const userSchema = Schema({
     type: String,
     required: true
   },
-  // image:
-  // {
-  //   type: File || URL,
-  // },
-  // facetoken: {
-  //   type: String,
-  //   unique: true
-  // }
+  facetoken: {
+    type: String,
+    unique: true
+  }
 });
 
 const User = mongoose.model('User', userSchema);

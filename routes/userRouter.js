@@ -9,28 +9,41 @@ const APP_KEY = process.env.FACEAPI_KEY;
 const APP_SECRET = process.env.FACEAPI_SECRET;
 const userRouter = new express.Router();
 
-// const upload = multer({dest : '/face', User.face_token : 'faces.face_token'})
+// const upload = multer({dest : '/face'})
 
 // const image_url = "https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2015/09/1442313353nasa-small.jpg";
 const FACE_TOKEN = "38df8830320f8aad58cdedb820788665";
 const app_url = `https://api-us.faceplusplus.com/facepp/v3/detect?api_key=${APP_KEY}&api_secret=${APP_SECRET}&image_url=https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2015/09/1442313353nasa-small.jpg`;
 
-userRouter.post('/',(req,res)=> {
+userRouter.post('/faces',(req,res)=> {
   console.log(req.body);
   console.log('app_key', APP_KEY === undefined);
+  console.log('username', req.body.username);
+  console.log('password', req.body.password);
 
-  request.post(app_url).
-    end(function (err, results) {
-       console.log('hi');
-       console.log(results.body);
-      // if (err) {
-      //   console.log('err',err);
-      // }
-      // console.log('res',res);
-      // done();
-    });
-  
+  request.post(app_url)
+    .end(function (err, results) {
+      console.log('hi');
+      console.log(results.body);
+      console.log('facetoken', results.body.faces[0].face_token);
+      return results;
+    // if (err) {
+    //   console.log('err',err);
+    // }
+    // console.log('res',res);
+    // done();
+    }).then(()=> {});
+  // .then((results)=> {
+  //   console.log('api results', results);
+  //   new User ({username: req.body.username, password: req.body.password , facetoken: results.body.faces[0].face_token}).save();
+  // })
+  // .then(() => res.status(200))
+  // .catch(err => res.sendStatus(404).send(err))
+
+
+
 });
+
 
 // then(results => {
 //   console.log(results.body)
@@ -57,7 +70,7 @@ userRouter.route('/faces')
       .save()
       .then(user => res.status(200).send(user))
       .catch(err => res.status(500).send(err.message));
-  })
+  });
 
 
 
@@ -88,6 +101,6 @@ userRouter.route('/face/:id')
       })
       .then(() => res.status(200))
       .catch(err => res.status(500).send(err.message));
-  })
+  });
 
 module.exports = userRouter;
