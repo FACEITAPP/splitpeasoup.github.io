@@ -18,7 +18,11 @@ const userSchema = Schema({
 		type: String,
 		required: true
 	},
-	// facetoken: {
+	photo: { 
+		type: Schema.Types.ObjectId,
+		ref: 'Photo'
+	},
+		// facetoken: {
 
 	// }
 });

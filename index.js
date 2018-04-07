@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const userRouter = require('./routes/userRouter.js');
 const authRouter = require('./routes/authRouter.js');
+const photoRouter = require('./routes/photoRouter.js');
 
 mongoose.connect(process.env.MONGODB_URI);
 
@@ -19,13 +20,14 @@ app.use(bodyParser.urlencoded({
 
 app.use('/api', userRouter);
 app.use('/api', authRouter);
+app.use('/api', photoRouter);
 
-app.get('/', (req, res) => {
-	return res.sendStatus(200);
-});
+// app.get('/', (req, res) => {
+// 	return res.sendStatus(200);
+// });
 
 const PORT = process.env.PORT;
 
 app.listen(PORT, () => {
-	console.log(`listening on ${PORT}`);
+  console.log('http://localhost:' + process.env.PORT);
 });
