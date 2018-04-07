@@ -10,6 +10,7 @@ const authRouter = require('./routes/authRouter.js');
 mongoose.connect(process.env.MONGODB_URI);
 
 const app = express();
+
 app.use(express.static('lib'));
 
 app.use(bodyParser.json());

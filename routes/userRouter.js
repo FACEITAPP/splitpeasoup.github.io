@@ -2,9 +2,65 @@
 
 const express = require('express');
 const User = require('../models/userSchema.js');
+// const multer = require('multer');
+const request = require('superagent');
+require('dotenv').config(); 
+const APP_KEY = process.env.FACEAPI_KEY;
+const APP_SECRET = process.env.FACEAPI_SECRET;
+const userRouter = new express.Router();
+
+// const upload = multer({dest : '/face'})
+
+// const image_url = "https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2015/09/1442313353nasa-small.jpg";
+const FACE_TOKEN = "38df8830320f8aad58cdedb820788665";
+const app_url = `https://api-us.faceplusplus.com/facepp/v3/detect?api_key=${APP_KEY}&api_secret=${APP_SECRET}&image_url=https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2015/09/1442313353nasa-small.jpg`;
+
+userRouter.post('/faces',(req,res)=> {
+  console.log(req.body);
+  console.log('app_key', APP_KEY === undefined);
+  console.log('username', req.body.username);
+  console.log('password', req.body.password);
+
+  request.post(app_url)
+    .then(results => {
+      console.log('hi');
+      console.log('facetoken', results.body.faces[0].face_token);
+      return results;
+    // if (err) {
+    //   console.log('err',err);
+    // }
+    // console.log('res',res);
+    // done();then
+    })
+    .then((results)=> {
+      return User.create({username: req.body.username, password: req.body.password, facetoken: results.body.faces[0].face_token});
+    })
+    .then((user) =>
+    {
+      console.log('then');
+      res.status(200).send(user);
+    } )
+    .catch(err => {
+      console.log('catch');
+      res.sendStatus(404).send(err);
+    });
+
+});
+
+
+// then(results => {
+//   console.log(results.body)
+// })
+// 
+//   .superagent.post(`https://api-us.faceplusplus.com/facepp/v3/detect?api_key=${APP_KEY}&api_secret=${APP_ID}&image_url=${results.picture}`
+// ).then(result => console.log(result));
+
+
+
+
+// userRouter.route('/facesplusplus').superagent.post(`https://api-us.faceplusplus.com/facepp/v3/face/setuserid?api_key=${APP_KEY}&api_secret=${APP_ID}&face_token=${FACE_TOKEN}&user_id=${USER_ID}`).then(result => res.send(result));
 const bearerAuth = require('../lib/bearer-auth-middleware.js');
 
-const userRouter = express.Router();
 
 userRouter.route('/faces')
 	.get(bearerAuth, (req, res) => {
