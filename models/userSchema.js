@@ -10,7 +10,6 @@ mongoose.connect(process.env.MONGODB_URI);
 const Schema = mongoose.Schema;
 
 const userSchema = Schema({
-<<<<<<< HEAD
   username: {
     type: String,
     required: true,
@@ -23,20 +22,6 @@ const userSchema = Schema({
   facetoken: {
     type: String
   }
-=======
-	username: {
-		type: String,
-		required: true,
-		unique: true
-	},
-	password: {
-		type: String,
-		required: true
-	},
-	// facetoken: {
-
-	// }
->>>>>>> a578d66bd83c01346b72a5fe9a2d0052bdb5f963
 });
 
 userSchema.pre('save', function (next) {

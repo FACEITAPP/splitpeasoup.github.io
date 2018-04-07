@@ -21,12 +21,9 @@ app.use(bodyParser.urlencoded({
 app.use('/api', userRouter);
 app.use('/api', authRouter);
 
-<<<<<<< HEAD
-=======
 app.get('/', (req, res) => {
 	return res.sendStatus(200);
 });
->>>>>>> a578d66bd83c01346b72a5fe9a2d0052bdb5f963
 
 const PORT = process.env.PORT;
 
