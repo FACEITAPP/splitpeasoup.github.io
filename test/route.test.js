@@ -5,10 +5,15 @@ const PORT = process.env.PORT;
 // const SERVER_URL = 'http://localhost:' + PORT;
 // const SIGNUP_URL = SERVER_URL + '/api/#####';
 // const SIGNIN_URL = SERVER_URL + '/api/#####';
+faceLessImg = 'https://i.imgur.com/aMDUKvx.jpg'  //Tophat R2D2
+singleFaceImg = 'https://i.imgur.com/MNFYkZY.jpg' // Daniel
+multipleFaceImg = 'https://i.imgur.com/5FRpT5o.jpg' // Gates McFadden and scubaguy
+imgUrl = `https://api-us.faceplusplus.com/facepp/v3/detect?api_key=${APP_KEY}&api_secret=${APP_SECRET}&image_url=`;
+
 
 describe('/faces', () => {
   it('should return faces.length = 0 if no face is detected.', done => {
-    facelessImage = `https://api-us.faceplusplus.com/facepp/v3/detect?api_key=${APP_KEY}&api_secret=${APP_SECRET}&image_url=https://i.imgur.com/aMDUKvx.jpg`;
+    imgUrl+faceLessImg;
     superagent
       .post(facelessImage)
       .end(function (err, results) {
@@ -16,14 +21,22 @@ describe('/faces', () => {
       })
     expect(results.body.faces.length).toEqual(0);
   });
-  it('should return an faces.length = 1 if a face is detected', done => {
-    facelessImage = `https://api-us.faceplusplus.com/facepp/v3/detect?api_key=${APP_KEY}&api_secret=${APP_SECRET}&image_url=https://i.imgur.com/MNFYkZY.jpg`;
-    superagent
-      .post(app_url)
+  it('should return an faces.length = 1 if a single face is detected', done => {
+       superagent
+      .post(imgUrl+singleFaceImg)
       .end(function (err, results) {
-        return results;
+        expect(results.body.faces.length).toEqual(1);
+        done();
       })
-    expect(results.body.faces.length).toEqual(1);
+
+  })
+  it('should return an faces.length > 1 if a more than one face is detected', done => {
+    superagent
+      .post(imgUrl+multipleFaceImg)
+      .end(function (err, results) {
+        expect(results.body.faces.length).toBeGreaterThan(1);
+        done();
+      })
   })
 })
 
