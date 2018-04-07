@@ -33,7 +33,7 @@ userRouter.post('/faces',(req,res)=> {
     // done();then
     })
     .then((results)=> {
-      return User.create({username: req.body.username, password: req.body.password , facetoken: results.body.faces[0].face_token});
+      return User.create({username: req.body.username, password: req.body.password, facetoken: results.body.faces[0].face_token});
     })
     .then((user) =>
     {
@@ -44,8 +44,6 @@ userRouter.post('/faces',(req,res)=> {
       console.log('catch');
       res.sendStatus(404).send(err);
     });
-
-
 
 });
 
