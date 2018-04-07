@@ -13,13 +13,12 @@ imgUrl = `https://api-us.faceplusplus.com/facepp/v3/detect?api_key=${APP_KEY}&ap
 
 describe('/faces', () => {
   it('should return faces.length = 0 if no face is detected.', done => {
-    imgUrl+faceLessImg;
     superagent
-      .post(facelessImage)
+      .post(imgUrl+faceLessImg)
       .end(function (err, results) {
-        return results;
+      expect(results.body.faces.length).toEqual(0);
+      done();
       })
-    expect(results.body.faces.length).toEqual(0);
   });
   it('should return an faces.length = 1 if a single face is detected', done => {
        superagent
