@@ -10,18 +10,22 @@ mongoose.connect(process.env.MONGODB_URI);
 const Schema = mongoose.Schema;
 
 const userSchema = Schema({
-  username: {
-    type: String,
-    required: true,
-    unique: true
-  },
-  password: {
-    type: String,
-    required: true
-  },
-  facetoken: {
-    type: String
-  }
+	username: {
+		type: String,
+		required: true,
+		unique: true
+	},
+	password: {
+		type: String,
+		required: true
+	},
+	photo: { 
+		type: Schema.Types.ObjectId,
+		ref: 'Photo'
+	},
+		// facetoken: {
+
+	// }
 });
 
 userSchema.pre('save', function (next) {

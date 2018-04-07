@@ -5,8 +5,8 @@ before_script: npm i
 services:
  - mongodb
 env:
-  PORT: 3001
-  MONGODB_URI: mongodb://localhost/mymongodb
+  PORT: 3000
+  MONGODB_URI: mongodb://localhost/face
 script:
   - node index.js &
   - npm test
