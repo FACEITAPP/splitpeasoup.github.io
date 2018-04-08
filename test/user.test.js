@@ -1,28 +1,30 @@
 'use strict';
-// require('dotenv').config();
 
-// const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
-// // server can receive data
-// // server can send data
-// //JWT is generated successfully
-// skip.describe('JWT generated succefully',()=> {
-//   let data = {username : 'bob', isAdmin: false};
-//   let token = jwt.sign(data, process.env.SECRET);
+const express = require('express');
+const superagent = require('superagent');
+const User = require('../models/userSchema.js');
+// const multer = require('multer');
+const request = require('superagent');
+require('dotenv').config(); 
+const APP_KEY = process.env.FACEAPI_KEY;
+const APP_SECRET = process.env.FACEAPI_SECRET;
+const userRouter = new express.Router();
 
-//   let tokenSections = token.split('.');
-//   expect(tokenSections).toEqual(3);
-// });
-// //JWT is able to verified
-// it('Verifies JWT',(done)=> {
-//   let data = {username : 'bob', isAdmin: false};
-//   let token = jwt.sign(data, process.env.SECRET);
 
-//   jwt.verify(token, process.env.SECRET, (err,decoded)=> {
-//     expect(decoded.username).toEqual(data.username);
-//     expect(decoded.isAdmin).toEqual(data.isAdmin);
-//     done();
-//   });
-// });
-// Hacked JWT returns error
-// incorrect JWT returns error
+const superagent = require('superagent');
+
+// const PORT = process.env.PORT;
+// const SERVER_URL = 'http://localhost:' + PORT;
+// const SIGNUP_URL = SERVER_URL + '/api/signup';
+// const SIGNIN_URL = SERVER_URL + '/api/signin';
+let imageFile = './default-image.jpg'
+function userParams() {
+  return {
+    username: 'facer' + Math.random(),
+    password: 'facerPassword',
+    photo = fs.readfile(imgFile)
+  }
+}
+
