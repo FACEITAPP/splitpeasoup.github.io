@@ -23,9 +23,9 @@ const userSchema = Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'Photo'
 	},
-		// facetoken: {
-
-	// }
+	facetoken: {
+		type: String
+	}
 });
 
 userSchema.pre('save', function (next) {
