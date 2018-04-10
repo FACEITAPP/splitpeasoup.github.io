@@ -8,12 +8,23 @@
 </head>
 <h1>Faces Form</h1>
 <body>
-  <h1>Upload Your Photo</h1>
+  <h1 id="signup">Sign Up</h1>
     <form action="/api/signup" method="POST" enctype="multipart/form-data">
       <input type="text" name="username" placeholder="username"/>
       <input type="password" name="password" placeholder="password" />
       <input type="file" name="photo" />
       <input type="submit" />
     </form>
+  <h1 id="signin">Sign In</h1>
+    <form action = "/api/signin" method = "GET" enctype= "multipart/form-data">
+      <input type="text" name="username" placeholder="username"/>
+      <input type="password" name="password" placeholder="password" />
+      <input type="file" name="photo" />
+      <input type="submit" />
+    </form>
+  <h1 id= "user controls">Control Panel</h1>
+  
+    
+  </h1>
   </body>
 </html>
