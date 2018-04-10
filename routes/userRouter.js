@@ -1,3 +1,4 @@
+
 'use strict';
 
 require('dotenv').config();
@@ -13,6 +14,7 @@ const APP_SECRET = process.env.FACEAPI_SECRET;
 const userRouter = new express.Router();
 const bearerAuth = require('../lib/bearer-auth-middleware.js');
 const authRouter = require('../routes/authRouter.js');
+const apiError = require('../lib/api-error-handler.js')
 const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
@@ -52,12 +54,13 @@ userRouter.route('/signup')
 			});
 		})
 			.then(photo => {
+        console.log(photo);
 				photoDb = photo;
 				let results = superagent.post(`https://api-us.faceplusplus.com/facepp/v3/detect?api_key=${APP_KEY}&api_secret=${APP_SECRET}&image_url=${url}`);
 				return results;
-			})
+      })
 			.then(results => {
-				return User.create({
+        	return User.create({
 					username: req.body.username,
 					password: req.body.password,
 					facetoken: results.body.faces[0].face_token,
@@ -67,7 +70,12 @@ userRouter.route('/signup')
 			.then(user => {
 				res.status(200).send(user);
 			})
-			.catch(err => res.status(500).send(err.message));
+			.catch(err => {
+        console.log('Error === ', err.response.body.error_message);
+        let msg = apiError(err.response.body);
+        console.log('msg === ',msg);
+        res.status(msg.status).send(msg.msg);
+      });
 	});
 
 
