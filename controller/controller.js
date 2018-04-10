@@ -2,7 +2,7 @@
 'use strict';
 
 var app = app || {};
-require(addToken);
+require(addToken);// is this how to bring in the addtoken function?
 
 if (window.location.pathname !== '/') {
   page.base('/signup');
@@ -17,25 +17,25 @@ page('/signup', () => {
 });
 
 page('/signin', () => {
-  app.initSignIn.init().addToken.authRouter.route('/signin').userRouter.route('/signin');
+  app.initSignIn.init().authRouter.route('/signin').userRouter.route('/signin');
 });
 
 
 // how do we accomplish being signed in and using user control panel?
 page('/usercontrol/finduser', () => {
-  app.initUserControl.init()authRouter.route('/panel');
+  app.initUserControl.init().addToken.authRouter.route('/panel');
 });
 
 page('/usercontrol/uploadphoto', () => {
-  app.initUserControl.init().authRouter.route('/panel');
+  app.initUserControl.init()addToken.authRouter.route('/panel');
 });
 
 page('/usercontrol/deleteuser', () => {
-  app.initUserControl.init().authRouter.route('/panel');
+  app.initUserControl.init()addToken.authRouter.route('/panel');
 });
 
 page('/usercontrol/deletphoto', () => {
-  app.initUserControl.init().authRouter.route('/panel');
+  app.initUserControl.init()addToken.authRouter.route('/panel');
 });
 
 page.start();

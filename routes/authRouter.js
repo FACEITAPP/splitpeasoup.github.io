@@ -25,8 +25,8 @@ authRouter.route('/signin')
 			.save()
 			.then(users => res.status(200).send(users))
       .catch(err => res.status(400).send(err.message));
-      
     
+      // is this where we create the token?
       
 	});
 
