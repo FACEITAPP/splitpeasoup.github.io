@@ -1,26 +1,27 @@
-require('dotenv').config();
+require('dotenv').config({path: '../.env'});
 const superagent = require('superagent');
 const btoa = require('btoa');
 const PORT = process.env.PORT;
 const SERVER_URL = 'http://localhost:' + PORT;
-const SIGNUP_URL = SERVER_URL + '/api/signup';
 const SIGNIN_URL = SERVER_URL + '/api/signin';
+const PANEL_URL = SERVER_URL + '/api/panel';
 
 function getUserParams() {
   return {
     username: 'Bradley' + Math.random(),
     password: 'trees'
   };
-}
+};
 
-describe('/api/signup', () => {
+describe('/api/signin', () => {
   it('should return status 400 if missing username', done => {
     let params = getUserParams();
     delete params['username'];
     superagent
-      .post(SIGNUP_URL)
+      .post(SIGNIN_URL)
       .set('Content-Type', 'application/json')
       .send(params)
+      .then(result => console.log('result', result.status))
       .catch(err => {
         expect(err.status).toEqual(400);
         done();
@@ -31,7 +32,7 @@ describe('/api/signup', () => {
     let params = getUserParams();
     delete params['password'];
     superagent
-      .post(SIGNUP_URL)
+      .post(SIGNIN_URL)
       .set('Content-Type', 'application/json')
       .send(params)
       .catch(err => {
@@ -43,7 +44,7 @@ describe('/api/signup', () => {
   it('should return status 200 with successful request', done => {
     let params = getUserParams();
     superagent
-      .post(SIGNUP_URL)
+      .post(SIGNIN_URL)
       .set('Content-Type', 'application/json')
       .send(params)
       .then(res => {
@@ -53,11 +54,11 @@ describe('/api/signup', () => {
   });
 });
 
-describe('/api/signin', () => {
+describe('/api/panel', () => {
   it('should return 401 unauthorized if password is incorrect', done => {
     let params = getUserParams();
     superagent
-      .post(SIGNUP_URL)
+      .post(PANEL_URL)
       .set('Content-Type', 'application/json')
       .send(params)
       .then(res => {
@@ -66,7 +67,7 @@ describe('/api/signin', () => {
         let payload = params['username'] + ':' + 'wrongpassword';
         let encoded = btoa(payload);
         return superagent
-          .get(SIGNIN_URL)
+          .get(PANEL_URL)
           .set('Authorization', 'Basic ' + encoded);
       })
       .catch(err => {
@@ -75,10 +76,10 @@ describe('/api/signin', () => {
       });
   });
 
-  it('should return 200 if username and password are', done => {
+  it.only('should return 200 if username and password are', done => {
     let params = getUserParams();
     superagent
-      .post(SIGNUP_URL)
+      .post(PANEL_URL)
       .set('Content-Type', 'application/json')
       .send(params)
       .then(res => {
@@ -86,7 +87,7 @@ describe('/api/signin', () => {
         let payload = params['username'] + ':' + params['password'];
         let encoded = btoa(payload);
         return superagent
-          .get(SIGNIN_URL)
+          .get(PANEL_URL)
           .set('Authorization', 'Basic ' + encoded);
       })
       .then(res => {

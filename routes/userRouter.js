@@ -36,7 +36,7 @@ userRouter.route('/faces')
 	});
 
 userRouter.route('/signup')
-	.post(upload.single('photo'), (req, res) => {
+	.post(upload.single('photo'), (req, res) => { // if the upload doesn't return a photo send error
 		let ext = path.extname(req.file.originalname);
 		let params = {
 			ACL: 'public-read',
@@ -44,7 +44,6 @@ userRouter.route('/signup')
 			Key: `${req.file.filename}${ext}`,
 			Body: fs.createReadStream(req.file.path)
 		};
-		console.log('user route hit');
 		let url;
 		let photoDb;
 		new Promise((resolve, reject) => {

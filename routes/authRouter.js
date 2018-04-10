@@ -7,13 +7,13 @@ const jwt = require('jsonwebtoken');
 
 const authRouter = new express.Router();
 
-authRouter.route('/signup')
+authRouter.route('/signin')
 
-	.get((req, res) => {
-		User.find()
-			.then(user => res.status(200).send(user))
-			.catch(err => res.sendStatus(400).send(err));
-	})
+	// .get((req, res) => {
+	// 	User.find()
+	// 		.then(user => res.status(200).send(user))
+	// 		.catch(err => res.sendStatus(400).send(err));
+	// })
 
 	.post((req, res) => {
 		if (!req.body.username || !req.body.password) {
@@ -21,7 +21,6 @@ authRouter.route('/signup')
 			res.send('username and password required to create an account');
 			return;
 		}
-		console.log('auth route hit');
 		new User(req.body)
 			.save()
 			.then(users => res.status(200).send(users))
@@ -29,17 +28,17 @@ authRouter.route('/signup')
       
 	});
 
-authRouter.route('/signin')
+authRouter.route('/panel')
 	.get((req, res) => {
 		if (!req.user) {
 			res.status(404); 
-			res.send('Not found');
+			res.send('Not authorized');
 			return;
 		}
 
 		let authHeader = req.get('Authorization');
 		if (!authHeader) {
-			res.status(400);
+			res.status(401);
 			res.send('Please provide a username/password');
 			return;
 		}
