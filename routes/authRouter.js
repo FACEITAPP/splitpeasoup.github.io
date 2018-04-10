@@ -24,7 +24,9 @@ authRouter.route('/signin')
 		new User(req.body)
 			.save()
 			.then(users => res.status(200).send(users))
-			.catch(err => res.status(400).send(err.message));
+      .catch(err => res.status(400).send(err.message));
+      
+    
       
 	});
 

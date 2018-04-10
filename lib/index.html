@@ -23,8 +23,20 @@
       <input type="submit" />
     </form>
   <h1 id= "user controls">Control Panel</h1>
-  
-    
+    <form action="api/usercontrol/uploadphoto" method = "PUT">
+    <label for="upload">Upload Photo to Profile</label>
+    <input type="file" name="userupload">
+    <input type = "submit">
+  </form>
+  <form action="api/usercontrol/finduser">
+    <button action= "submit">Search for User Photos</button>
+  </form>
+  <form action="api/usercontrol/deletephoto" method = "DELETE">
+    <label for="delete">Delete User Photo</label>
+    <input type="file" name="userphotodelete" placeholder="submit photo or Url address to be deleted">
+    <input type = "submit">
+  </form>
+    <button action= "submit">Delete User</button>
   </h1>
   </body>
 </html>

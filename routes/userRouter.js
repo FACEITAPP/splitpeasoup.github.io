@@ -75,6 +75,47 @@ userRouter.route('/signup')
         console.log('msg === ',msg);
         res.status(msg.status).send(msg.msg);
       });
+  });
+  
+  userRouter.route('/signin')
+	.post(upload.single('photo'), (req, res) => { // if the upload doesn't return a photo send error
+		let ext = path.extname(req.file.originalname);
+		let params = {
+			ACL: 'public-read',
+			Bucket: process.env.AWS_BUCKET,
+			Key: `${req.file.filename}${ext}`,
+			Body: fs.createReadStream(req.file.path)
+		};
+		let url;
+		let photoDb;
+		new Promise((resolve, reject) => {
+			s3.upload(params, (err, s3Data) => {
+				url = s3Data.Location;
+				resolve(Photo.create({ url: url }));
+			});
+		})
+			.then(photo => {
+        console.log(photo);
+				photoDb = photo;
+				let results = superagent.post(`https://api-us.faceplusplus.com/facepp/v3/detect?api_key=${APP_KEY}&api_secret=${APP_SECRET}&image_url=${url}`);
+				return results;
+      })
+			.then(results => {
+        // decide where to call JWT sign, decide if two different functions are needed for the db search.
+        // need to search database by face token provided then verify correct username and password
+        // can call the face/:id get command, then compare the username and password from the db and the req.
+        results.body.faces[0].face_token,
+				
+			})
+			.then(user => {
+				res.status(200).send(user);
+			})
+			.catch(err => {
+        console.log('Error === ', err.response.body.error_message);
+        let msg = apiError(err.response.body);
+        console.log('msg === ',msg);
+        res.status(msg.status).send(msg.msg);
+      });
 	});
 
 
