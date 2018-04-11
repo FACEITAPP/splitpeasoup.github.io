@@ -4,7 +4,7 @@ require('dotenv').config({path: '../.env'});
 const superagent = require('superagent');
 const SERVER_URL = 'http://localhost:3000'; 
 + process.env.PORT;
-
+const SIGNUP_URL = SERVER_URL + '/api/signup';
 //.set('Authorization', 'Bearer ' + token) => this may help with passing the tokenfor signin, how to successful attach token to request header???
 // To do today:
 // update signin function
@@ -12,6 +12,7 @@ const SERVER_URL = 'http://localhost:3000';
 //test user paths
 //tighten up code to increase test coverage
 //look up what actions increase test coverage
+// implement heroku and travis
 
 
 
@@ -25,10 +26,14 @@ function getUserParams() {
 
 describe('creates new user',()=>{
 
-	test('userRouter post route returns 200 to indicate success',(done)=> {
-    getUserParams
-    
-		toBe(res.status).toEqual(200);  
+	test('userRouter signup post indicates successful completion of signup route by return status 200',(done)=> {
+    let newUser = getUserParams();
+    superagent.post(SERVER_URL + '/api/faces')
+        .set('Content-Type', 'application/json')
+        .send(newUser)
+        .end((err, res) => {
+          expect(res.status).toBe(200);
+          done();
   })
   
   test('userRouter uploads photo to S3',{
