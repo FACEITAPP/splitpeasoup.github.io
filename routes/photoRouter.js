@@ -18,7 +18,6 @@ const photoRouter = new express.Router();
 photoRouter.route('/photos')
   .get((req, res) => {
     Photo.find()
-    // .populate('photo')
       .then(photos => res.status(200).send(photos))
       .catch(err => res.status(400).send(err.message));
   });

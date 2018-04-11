@@ -21,6 +21,7 @@ const userSchema = Schema({
 	},
 	photo: { 
 		type: Schema.Types.ObjectId,
+		required: true,
 		ref: 'Photo'
 	},
 	facetoken: {

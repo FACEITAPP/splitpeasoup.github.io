@@ -1,5 +1,5 @@
 'use strict';
-// require('dotenv').config();
+// require('dotenv').config({path: '../.env'});
 
 // const jwt = require('jsonwebtoken');
 
@@ -18,7 +18,7 @@
 //   let data = {username : 'bob', isAdmin: false};
 //   let token = jwt.sign(data, process.env.SECRET);
 
-//   jwt.verify(token, process.env.SECRET, (err,decoded)=> {
+//   jwt.verify(token, process.env.SECRET, (err,decoded) => {
 //     expect(decoded.username).toEqual(data.username);
 //     expect(decoded.isAdmin).toEqual(data.isAdmin);
 //     done();
