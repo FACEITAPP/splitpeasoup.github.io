@@ -13,7 +13,7 @@ authRouter.route('/signin')
 	// 	User.find()
 	// 		.then(user => res.status(200).send(user))
 	// 		.catch(err => res.sendStatus(400).send(err));
-	// })
+  // })
 
 	.post((req, res) => {
 		if (!req.body.username || !req.body.password) {
@@ -27,7 +27,7 @@ authRouter.route('/signin')
       .catch(err => res.status(400).send(err.message));
     
       // is this where we create the token?
-      
+      // a little confused about this
 	});
 
 authRouter.route('/panel')
