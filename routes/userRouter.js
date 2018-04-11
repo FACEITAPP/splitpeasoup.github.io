@@ -76,7 +76,7 @@ userRouter.route('/signup')
 				res.status(msg.status).send(msg.msg);
 			});
 	});
-  
+  // need to add a compare API request after running a find User function in the database and supplying facetoken. 
 userRouter.route('/signin').post(upload.single('photo'), (req, res) => { // if the upload doesn't return a photo send error
 	let ext = path.extname(req.file.originalname);
 	let params = {
@@ -102,6 +102,7 @@ userRouter.route('/signin').post(upload.single('photo'), (req, res) => { // if t
 		.then(results => {
       let token = User.methods.checkpassword(req.body.password);
       User.token.push(token);
+      User.save();
 			return token;
 		})
 		.then(user => {
