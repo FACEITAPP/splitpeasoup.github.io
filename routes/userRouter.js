@@ -76,7 +76,7 @@ userRouter.route('/signup')
 				res.status(msg.status).send(msg.msg);
 			});
 	});
-  // need to add a compare API request after running a find User function in the database and supplying facetoken. 
+// need to add a compare API request after running a find User function in the database and supplying facetoken. 
 userRouter.route('/signin').post(upload.single('photo'), (req, res) => { // if the upload doesn't return a photo send error
 	let ext = path.extname(req.file.originalname);
 	let params = {
@@ -95,20 +95,25 @@ userRouter.route('/signin').post(upload.single('photo'), (req, res) => { // if t
 	})
 		.then(photo => {
 			console.log(photo);
-      photoDb = photo;
-      // do we need to hash the login req.body to find the password in the database?
-      console.log('username signup login', req.body.username);
-      let temp = User.find({username: req.body.username});
-      // temp._id
-      //  is this how to navicate to the signedUser facetoken? let signedUser = User.temp._id.facetoken
+			photoDb = photo;
+			// do we need to hash the login req.body to find the password in the database?
+			console.log('username signup login', req.body.username);
+			let temp = User.find({username: req.body.username});
+      
+			let signedUser = User.temp._id.facetoken;
+			console.log('facetoken of signed user', signedUser);
 			let results = superagent.post(`https://api-us.faceplusplus.com/facepp/v3/compare?api_key=${APP_KEY}&api_secret=${APP_SECRET}&image_url=${url}&face_token=${signedUser}`);
 			return results;
 		})
 		.then(results => {
-      let token = User.methods.checkpassword(req.body.password);
-      User.token.push(token);
-      User.save();
-			return token;// how are we saving the token to be used later?
+			console.log('match confidence',results.thresholds);
+			if(results.thresholds === ("1e-3"||"1e-4"||"1e-5")){
+				let token = User.methods.checkpassword(req.body.password);
+				User.token.push(token);
+				User.save();
+				return token;
+      
+			};// how are we saving the token to be used later?
 		})
 		.then(user => {
 			res.status(200).send(user);
