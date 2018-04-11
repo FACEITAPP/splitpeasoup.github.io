@@ -28,6 +28,7 @@ authRouter.route('/signin')
     
       // is this where we create the token?
       // a little confused about this
+      // do we run the userSchema check password function?
 	});
 
 authRouter.route('/panel')
