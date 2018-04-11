@@ -19,7 +19,9 @@ const SIGNUP_URL = SERVER_URL + '/api/signup';
 function getUserParams() {
 	return {
 		username: 'Bradley' + Math.random(),
-		password: 'trees'
+    password: 'trees'
+    photo: {url:"http://www.virtualffs.co.uk/my%20FFS%20thesis%20images/Androgyne.jpg"}//how to populate this param ,
+    facetoken: "41811c3b5ba18cf4f65cc5d7fe37ea98",
 	};
 };
 
@@ -37,6 +39,8 @@ describe('creates new user',()=>{
   })
   
   test('userRouter uploads photo to S3',{
+
+
 //may want this test outside the description body
 
 })
