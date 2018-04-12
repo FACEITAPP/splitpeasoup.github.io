@@ -25,10 +25,8 @@ const userSchema = Schema({
 	},
 	facetoken: {
 		type: String
-  },
-  token:{
-    type: String
   }
+
 });
 
 userSchema.pre('save', function (next) {

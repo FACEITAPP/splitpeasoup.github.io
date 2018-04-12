@@ -18,7 +18,7 @@ const SIGNUP_URL = SERVER_URL + '/api/signup';
 
 function getUserParams() {
 	return {
-		username: 'Bradley' + Math.random(),
+		username: '' + Math.random(),
     password: 'trees'
     photo: {url:"http://www.virtualffs.co.uk/my%20FFS%20thesis%20images/Androgyne.jpg"}//how to populate this param ,
     facetoken: "41811c3b5ba18cf4f65cc5d7fe37ea98",
