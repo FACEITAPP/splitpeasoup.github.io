@@ -101,21 +101,16 @@ userRouter.route('/signin').post(upload.single('photo'), (req, res) => { // if t
 			});
 		})
 			.then(photo => {
-				console.log('post url',`https://api-us.faceplusplus.com/facepp/v3/compare?api_key=${APP_KEY}&api_secret=${APP_SECRET}&image_url1=${url}&face_token2=${signedUser}`);
 				console.log('object', photo);
 				photoDb = photo;
-				console.log('url for signin post', url);
-				console.log('signedUser facetoken for signin post', signedUser);
-				// do we need to hash the login req.body to find the password in the database
 				let results = superagent.post(`https://api-us.faceplusplus.com/facepp/v3/compare?api_key=${APP_KEY}&api_secret=${APP_SECRET}&image_url1=${url}&face_token2=${signedUser}`);
-				console.log('post url',`https://api-us.faceplusplus.com/facepp/v3/compare?api_key=${APP_KEY}&api_secret=${APP_SECRET}&image_url1=${url}&face_token2=${signedUser}`);
 				return results;
 			})
 			.then(results => {
         console.log('match confidence',results);
          let threshold = [{low : '1e-3'},{med :'1e-4'},{high :'1e-5'}];
 				if(threshold.includes(results.threshold)){
-          
+      
 				}
 			})
 			.then(user => {
@@ -139,7 +134,7 @@ userRouter.route('/face/:id')
 				.catch(err => res.status(400).send(err.message));
 		}
 	})
-
+// if we are only updating the photo in their profile, not sure this put route is used
 	.put(bearerAuth, (req, res) => {
 		let id = req.params.id;
 		User.findByIdAndUpdate(id, req.body, {
