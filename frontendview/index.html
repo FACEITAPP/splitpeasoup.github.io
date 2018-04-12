@@ -16,7 +16,7 @@
       <input type="submit" />
     </form>
   <h1 id="signin">Sign In</h1>
-    <form action = "/api/signin" method = "GET" enctype= "multipart/form-data">
+    <form id="signinForm" action = "/api/signin" method = "POST" enctype= "multipart/form-data">
       <input type="text" name="username" placeholder="username"/>
       <input type="password" name="password" placeholder="password" />
       <input type="file" name="photo" />
@@ -26,5 +26,6 @@
   
     
   </h1>
+  <script src="/main.js"></script>
   </body>
 </html>
