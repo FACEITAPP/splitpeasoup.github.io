@@ -1,5 +1,22 @@
 'use strict';
-// require('dotenv').config();
+require('dotenv').config({ path: '../.env' });
+require('dotenv').config({ path: '../.env' });
+const superagent = require('superagent');
+const btoa = require('btoa');
+const PORT = process.env.PORT;
+const SERVER_URL = 'http://localhost:' + PORT;
+const SIGNIN_URL = SERVER_URL + '/api/signin';
+const PANEL_URL = SERVER_URL + '/api/panel';
+
+
+
+
+
+
+
+
+
+
 
 // const jwt = require('jsonwebtoken');
 

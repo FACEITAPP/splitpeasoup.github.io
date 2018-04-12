@@ -71,44 +71,13 @@ userRouter.route('/signup')
 				res.status(200).send(user);
 			})
 			.catch(err => {
-				console.log('err', err);
-				console.log('Error === ', err.response.body.error_message);
-				let msg = apiError(err.response.body);
-				console.log('msg === ', msg);
-				res.status(msg.status).send(msg.msg);
-			});
-	});
-// need to add a compare API request after running a find User function in the database and supplying facetoken. 
-// userRouter.route('/signin').post(upload.single('photo'), (req, res) => { // if the upload doesn't return a photo send error
-// 	let ext = path.extname(req.file.originalname);
-// 	let params = {
-// 		ACL: 'public-read',
-// 		Bucket: process.env.AWS_BUCKET,
-// 		Key: `${req.file.filename}${ext}`,
-// 		Body: fs.createReadStream(req.file.path)
-// 	};
-// 	console.log('username signup login', req.body.username);
-// 	User.findOne({username: req.body.username}).then(temp =>{
-// 		console.log('temp value', temp);
-// 		// let signedUser = temp._id.facetoken;
-// 		let signedUser = temp.facetoken;
-// 		console.log('facetoken of signed user', signedUser);
-// 		let url;
-// 		let photoDb;
-// 		new Promise((resolve, reject) => {
-// 			s3.upload(params, (err, s3Data) => {
-// 				url = s3Data.Location;
-// 				resolve(Photo.create({ url: url }));
-// 			});
-// 		})
-// 			.then(photo => {
-// 				console.log(photo);
-// 				photoDb = photo;
-// 				// do we need to hash the login req.body to find the password in the database
-// 				let results = superagent.post(`https://api-us.faceplusplus.com/facepp/v3/compare?api_key=${APP_KEY}&api_secret=${APP_SECRET}&image_url=${url}&face_token=${signedUser}`);
-// 				return results;
-// 			})
-// 			.then(results => {
+        console.log('Error === ', err.response.body.error_message);
+        let apiMsg = apiError(err.response.body);
+        console.log('msg === ',apiMsg);
+        res.status(apiMsg.status).send(apiMsg.msg);
+      });
+  });
+  
 userRouter.route('/signin').post(upload.single('photo'), (req, res) => { // if the upload doesn't return a photo send error
 	let ext = path.extname(req.file.originalname);
 	let params = {
