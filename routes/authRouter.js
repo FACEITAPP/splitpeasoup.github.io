@@ -4,6 +4,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const User = require('../models/userSchema.js');
 const jwt = require('jsonwebtoken');
+const bearer= require('../lib/bearer-auth-middleware');
 
 const authRouter = new express.Router();
 
@@ -30,16 +31,6 @@ authRouter.route('/signin')
 			res.send(msg);
 			return;
 		}
-<<<<<<< HEAD
-		new User(req.body)
-			.save()
-			.then(users => res.status(200).send(users))
-      .catch(err => res.status(400).send(err.message));
-    
-      // is this where we create the token?
-      // a little confused about this
-      // do we run the userSchema check password function?
-=======
 		User.findOne({username: username})
 		.then(user => {
 			if (user === null) {
@@ -47,43 +38,52 @@ authRouter.route('/signin')
 			}
 			user.checkPassword(password)
 				.then(token => {
-					res.send({token});
+          res.send({token});// save token to local storage
+        // var testObject = { 'one': 1, 'two': 2, 'three': 3 };
+
+        // // Put the object into storage
+        // localStorage.setItem('testObject', JSON.stringify(testObject));
+
+        // // Retrieve the object from storage
+        // var retrievedObject = localStorage.getItem('testObject');
+
+        // console.log('retrievedObject: ', JSON.parse(retrievedObject));
 				})
 				.catch(err => res.status(401).send({msg:err.message}));
 		});
->>>>>>> 52052cf5f3dd9e84bbed9b55e0691bb335d9671c
 	});
 
-authRouter.route('/panel')
-	.get((req, res) => {
-		if (!req.user) {
-			res.status(404); 
-			res.send('Not authorized');
-			return;
-		}
+// authRouter.route('/panel')
+// 	.get((req, res) => {
+// 		if (!req.user) {
+// 			res.status(404); 
+// 			res.send('Not authorized');
+// 			return;
+//     }
+    
+// 		// let authHeader = req.get('Authorization');
+// 		// if (!authHeader) {
+// 		// 	res.status(401);
+// 		// 	res.send('Please provide a username/password');
+// 		// 	return;
+// 		// }
+// 		// let payload = authHeader.split('Basic ')[1];
+// 		// let decoded = Buffer.from(payload, 'base64')
+// 		// 	.toString();
+// 		// let [username, password] = decoded.split(':');
 
-		let authHeader = req.get('Authorization');
-		if (!authHeader) {
-			res.status(401);
-			res.send('Please provide a username/password');
-			return;
-		}
-		let payload = authHeader.split('Basic ')[1];
-		let decoded = Buffer.from(payload, 'base64')
-			.toString();
-		let [username, password] = decoded.split(':');
-
-		User.findOne({username: username})
-			.then(user => {
-				if (user === null) {
-					res.send('user not found');
-				}
-				user.checkPassword(password)
-					.then(token => {
-						res.send(token);
-					})
-					.catch(err => res.status(401).send(err.message));
-			});
-	});
+// 		// User.findOne({username: username})
+// 		// 	.then(user => {
+// 		// 		if (user === null) {
+// 		// 			res.send('user not found');
+// 		// 		}
+// 		// 		user.checkPassword(password)
+// 		// 			.then(token => {
+// 		// 				res.send(token);
+// 		// 			})
+// 		// 			.catch(err => res.status(401).send(err.message));
+//     // 	});
+  
+// 	});
 
 module.exports = authRouter;

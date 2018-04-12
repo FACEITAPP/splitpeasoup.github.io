@@ -116,11 +116,7 @@ userRouter.route('/signin').post(upload.single('photo'), (req, res) => { // if t
          let threshold = [{low : '1e-3'},{med :'1e-4'},{high :'1e-5'}];
 				if(threshold.includes(results.threshold)){
           
-					// let token = User.methods.checkpassword(req.body.password);
-					// User.token.push(token);
-					// User.save();
-					// return token;
-				}// how are we saving the token to be used later?
+				}
 			})
 			.then(user => {
 				res.status(200).send(user);
@@ -154,7 +150,10 @@ userRouter.route('/face/:id')
 	})
 
 	.delete(bearerAuth, (req, res) => {
-		User.findByIdAndRemove(req.params.id)
+    console.log(req.params.id)
+    superagent.route('/user').delete(req, res)
+      .then(user => {
+        User.findByIdAndRemove(req.params.id)
 			.then(user => {
 				if (website.userId.toString() === req.user.id.toString()) {
 					return user.remove();
@@ -162,7 +161,8 @@ userRouter.route('/face/:id')
 			})
 			.then(() => res.status(200))
 			.catch(err => res.status(500).send(err.message));
-	});
+  });
+});
   
   
 
