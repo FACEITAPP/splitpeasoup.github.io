@@ -71,9 +71,9 @@ userRouter.route('/signup')
 			})
 			.catch(err => {
         console.log('Error === ', err.response.body.error_message);
-        let msg = apiError(err.response.body);
-        console.log('msg === ',msg);
-        res.status(msg.status).send(msg.msg);
+        let apiMsg = apiError(err.response.body);
+        console.log('msg === ',apiMsg);
+        res.status(apiMsg.status).send(apiMsg.msg);
       });
 	});
 

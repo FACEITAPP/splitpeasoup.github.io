@@ -1,4 +1,4 @@
-require('dotenv').config({path: '../.env'});
+require('dotenv').config({ path: '../.env' });
 const superagent = require('superagent');
 const btoa = require('btoa');
 const PORT = process.env.PORT;
@@ -83,7 +83,7 @@ describe('/api/panel', () => {
       .set('Content-Type', 'application/json')
       .send(params)
       .then(res => {
-        expect(res.status).toEqual(200); 
+        expect(res.status).toEqual(200);
         let payload = params['username'] + ':' + params['password'];
         let encoded = btoa(payload);
         return superagent
