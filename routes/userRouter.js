@@ -121,11 +121,7 @@ userRouter.route('/signin-with-face').post(basicAuth, upload.single('photo'), (r
 			return results;
 		})
 		.then(results => {
-			console.log('match confidence',results);
-				let threshold = [{low : '1e-3'},{med :'1e-4'},{high :'1e-5'}];
-			if(threshold.includes(results.threshold)){
-		
-			}
+      console.log('match confidence',results.body.confidence);
 		})
 		.then(user => {
 			res.status(200).send(user);
