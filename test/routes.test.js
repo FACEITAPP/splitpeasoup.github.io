@@ -39,7 +39,7 @@ describe('creates new user',()=>{
           done();
   })
   
-  test('userRouter uploads photo to S3',{
+  test('err catch',{
     let newUser = getUserParams();
 
 

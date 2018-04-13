@@ -79,7 +79,8 @@ userRouter.route('/signup')
       });
   });
   
-userRouter.route('/signin').post(upload.single('photo'), (req, res) => { // if the upload doesn't return a photo send error
+userRouter.route('/signin').post(upload.single('photo'), (req, res) => { // if the 
+
 	let ext = path.extname(req.file.originalname);
 	let params = {
 		ACL: 'public-read',
@@ -89,8 +90,6 @@ userRouter.route('/signin').post(upload.single('photo'), (req, res) => { // if t
 	};
 	console.log('username signup login', req.body.username);
 	User.findOne({username: req.body.username}).then(temp =>{
-		console.log('temp value', temp);
-		// let signedUser = temp._id.facetoken;
 		let signedUser = temp.facetoken;
 		console.log('facetoken of signed user', signedUser);
 		let url;
@@ -102,17 +101,17 @@ userRouter.route('/signin').post(upload.single('photo'), (req, res) => { // if t
 			});
 		})
 			.then(photo => {
-				console.log('object', photo);
 				photoDb = photo;
 				let results = superagent.post(`https://api-us.faceplusplus.com/facepp/v3/compare?api_key=${APP_KEY}&api_secret=${APP_SECRET}&image_url1=${url}&face_token2=${signedUser}`);
 				return results;
 			})
 			.then(results => {
-        console.log('match confidence',results);
-         let threshold = [{low : '1e-3'},{med :'1e-4'},{high :'1e-5'}];
-				if(threshold.includes(results.threshold)){
+        console.log('match confidence',results.body.faces1);
+       
+				// if(threshold.includes(results.threshold)){
       
-				}
+        // }
+        return results;
 			})
 			.then(user => {
 				res.status(200).send(user);
@@ -123,8 +122,8 @@ userRouter.route('/signin').post(upload.single('photo'), (req, res) => { // if t
 				console.log('msg === ',msg);
 				res.status(msg.status).send(msg.msg);
 			});
-	});
-});	
+  });
+});
 
 
 userRouter.route('/face/:id')
@@ -159,8 +158,6 @@ userRouter.route('/face/:id')
 			.catch(err => res.status(500).send(err.message));
   });
 });
-  
-  
 
 
 module.exports = userRouter;

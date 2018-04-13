@@ -16,7 +16,7 @@ authRouter.route('/signin')
 	// 		.catch(err => res.sendStatus(400).send(err));
   // })
 
-	.post((req, res) => {
+	.get((req, res) => {
 		console.log('signing in', req.body);
 		let authHeader = req.get('Authorization');
 		let payload = authHeader.split('Basic ')[1];

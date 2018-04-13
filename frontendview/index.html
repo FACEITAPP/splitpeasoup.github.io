@@ -16,12 +16,12 @@
       <input type="submit" />
     </form>
   <h1 id="signin">Sign In</h1>
-    <form id="signinForm" action = "/api/signin" method = "POST" enctype= "multipart/form-data">
-      <input type="text" name="username" placeholder="username"/>
-      <input type="password" name="password" placeholder="password" />
-      <input type="file" name="photo" />
-      <input type="submit" />
-    </form>
+  <form action="/api/signin" method="POST" enctype="multipart/form-data">
+    <input type="text" name="username" placeholder="username"/>
+    <input type="password" name="password" placeholder="password" />
+    <input type="file" name="photo" />
+    <input type="submit" />
+  </form>
   <h1 id= "user controls">Control Panel</h1>
     <form id="sendtoken" action = "/api/panel" method = "POST">
       <input type="submit" />
