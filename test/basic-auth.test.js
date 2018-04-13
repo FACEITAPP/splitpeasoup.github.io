@@ -25,7 +25,7 @@ function signUpUser(newUser) {
   .attach('photo', imageLocation)
 }
 describe('sends 200 when user successfully signs up on /signup', () => {
-  it.only('sends 200 for authorized GET request made with a valid id', (done) => {
+  it('sends 200 for authorized GET request made with a valid id', (done) => {
     let newUser = getUserParams();
       signUpUser(newUser)
       .end((err, res) => {

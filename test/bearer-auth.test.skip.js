@@ -81,7 +81,8 @@ describe('Handle valid authorization', () => {
               console.error('error', err);
               fail();
             }
-            token = res.body.token; // grab the JWToken
+            token = res.body.token;
+            console.log('token', res.body.token)
             expect(res.status).toBe(200);
             expect(token).toBeDefined();
             done();
