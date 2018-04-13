@@ -25,7 +25,8 @@ const userSchema = Schema({
 	},
 	facetoken: {
 		type: String
-	}
+  }
+
 });
 
 userSchema.pre('save', function (next) {
@@ -58,8 +59,10 @@ userSchema.methods.checkPassword = function (password) {
 			let payload = { userId: user.id };
 			let token = jwt.sign(payload, process.env.SECRET);
 			resolve(token);
-		});
-	});
+    });
+  });
+  console.log(token);
+  return token;
 };
 
 const User = mongoose.model('User', userSchema);
