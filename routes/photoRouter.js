@@ -7,6 +7,7 @@ const multer = require('multer');
 const upload = multer({
   dest: './uploads/'
 });
+const bearerAuth = require('../lib/bearer-auth-middleware.js');
 
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3();

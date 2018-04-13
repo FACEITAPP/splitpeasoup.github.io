@@ -5,6 +5,7 @@ const superagent = require('superagent');
 const SERVER_URL = 'http://localhost:3000'; 
 + process.env.PORT;
 const SIGNUP_URL = SERVER_URL + '/api/signup';
+const faker = require('faker');
 //.set('Authorization', 'Bearer ' + token) => this may help with passing the tokenfor signin, how to successful attach token to request header???
 // To do today:
 // update signin function
@@ -17,11 +18,11 @@ const SIGNUP_URL = SERVER_URL + '/api/signup';
 
 
 function getUserParams() {
+  let fakerImage = faker.image.people();
 	return {
 		username: '' + Math.random(),
     password: 'trees'
-    photo: {url:"http://www.virtualffs.co.uk/my%20FFS%20thesis%20images/Androgyne.jpg"}//how to populate this param ,
-    facetoken: "41811c3b5ba18cf4f65cc5d7fe37ea98",
+    photo: fakerImage 
 	};
 };
 
@@ -30,7 +31,7 @@ describe('creates new user',()=>{
 
 	test('userRouter signup post indicates successful completion of signup route by return status 200',(done)=> {
     let newUser = getUserParams();
-    superagent.post(SERVER_URL + '/api/faces')
+    superagent.post(SERVER_URL + '/api/signup')
         .set('Content-Type', 'application/json')
         .send(newUser)
         .end((err, res) => {
@@ -39,6 +40,7 @@ describe('creates new user',()=>{
   })
   
   test('userRouter uploads photo to S3',{
+    let newUser = getUserParams();
 
 
 //may want this test outside the description body
@@ -51,11 +53,7 @@ describe('creates new user',()=>{
   })
 })
   
-  
 
-  
-describe('uploads user photo to S3')
-describe('returns face_token for new user')
 
 
 // test signup route
