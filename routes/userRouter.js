@@ -106,9 +106,9 @@ userRouter.route('/signin').post(upload.single('photo'), (req, res) => { // if t
 				return results;
 			})
 			.then(results => {
-        console.log('match confidence',results.body.faces1);
+        console.log('match confidence',results.body.confidence);
        
-				// if(threshold.includes(results.threshold)){
+				// if(results.body.confidence > 95){
       
         // }
         return results;
