@@ -56,13 +56,9 @@ userSchema.methods.checkPassword = function (password) {
 				console.log('not valid', err);
 				reject(err);
 			}
-			let payload = { userId: user.id };
-			let token = jwt.sign(payload, process.env.SECRET);
-			resolve(token);
+			resolve(user);
     });
   });
-  console.log(token);
-  return token;
 };
 
 const User = mongoose.model('User', userSchema);
