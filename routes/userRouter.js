@@ -122,9 +122,14 @@ userRouter.route('/signin-with-face').post(basicAuth, upload.single('photo'), (r
 		})
 		.then(results => {
       console.log('match confidence',results.body.confidence);
+      if(results.body.confidence > 95){
+        let bearerToken = superagent.post(`/signin`,(req.username, req.password));
+      }
+      return bearerToken;
+      
 		})
-		.then(user => {
-			res.status(200).send(user);
+		.then(bearerToken => {
+			res.status(200).send(bearerToken);
 		})
 		.catch(err => {
 			console.log('Error === ', err.response.body.error_message);

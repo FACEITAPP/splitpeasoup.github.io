@@ -24,7 +24,7 @@ authRouter.route('/signin')
 		let token = jwt.sign(payload, process.env.SECRET);
 
     res.send({token});// save token to local storage
-	});
+  });
 
 // authRouter.route('/panel')
 // 	.get((req, res) => {
