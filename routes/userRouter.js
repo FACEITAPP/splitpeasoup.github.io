@@ -60,6 +60,7 @@ userRouter.route('/signup')
 				return results;
 			})
 			.then(results => {
+				console.log('req.body!!!!!!!', req.body);
         	return User.create({
 					username: req.body.username,
 					password: req.body.password,
