@@ -4,6 +4,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const User = require('../models/userSchema.js');
 const jwt = require('jsonwebtoken');
+const basicAuth = require('../lib/basic-auth-middleware');
 const bearer= require('../lib/bearer-auth-middleware');
 
 const authRouter = new express.Router();
@@ -16,40 +17,13 @@ authRouter.route('/signin')
 	// 		.catch(err => res.sendStatus(400).send(err));
   // })
 
-	.post((req, res) => {
-		console.log('signing in', req.body);
-		let authHeader = req.get('Authorization');
-		let payload = authHeader.split('Basic ')[1];
-		let decoded = Buffer.from(payload, 'base64').toString();
-		let [username, password] = decoded.split(':');
-		console.log('auth info', username, password);
+	.get(basicAuth, (req, res) => {
+		let user = req.user;
 
-		if (!username || !password) {
-			res.status(400);
-			let msg = 'username and password required to create an account';
-			console.log('signin error:', {msg});
-			res.send(msg);
-			return;
-		}
-		User.findOne({username: username})
-		.then(user => {
-			if (user === null) {
-				res.send({msg:'user not found'});
-			}
-			user.checkPassword(password)
-				.then(token => {
-          let savedToken = { 'savedToken': token};
+		let payload = { userId: user._id };
+		let token = jwt.sign(payload, process.env.SECRET);
 
-        // Put the object into storage
-        localStorage.setItem('savedToken', JSON.stringify(savedToken));
-          res.send({token});// save token to local storage
-        // var testObject = { 'one': 1, 'two': 2, 'three': 3 };
-
-        // // Put the object into storage
-        // localStorage.setItem('testObject', JSON.stringify(testObject));
-				})
-				.catch(err => res.status(401).send({msg:err.message}));
-		});
+    res.send({token});// save token to local storage
 	});
 
 // authRouter.route('/panel')
