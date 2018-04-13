@@ -22,9 +22,21 @@
       <input type="file" name="photo" />
       <input type="submit" />
     </form>
-  <h1 id= "user controls">Control Panel</h1>
-  
-    
+  <h1>Control Panel</h1>
+    <form action="/face/:id" method = "PUT" id= "user controls">
+    <label for="upload">Upload Photo to Profile</label>
+    <input type="file" name="userupload">
+    <input type = "submit">
+  </form>
+  <form action="/photos" id ="user controls" action = "GET">
+    <button action= "submit">Search for User Photos</button>
+  </form>
+  <form action="/user" method = "DELETE" id= "user controls">
+    <label for="delete">Delete User Photo</label>
+    <input type="file" name="userphotodelete" placeholder="submit photo or Url address to be deleted">
+    <input type = "submit">
+  </form>
+    <form action = "/face/:id" method="DELETE" id= "user controls"><button action= "submit">Delete User</button></form>
   </h1>
   <script src="/main.js"></script>
   </body>

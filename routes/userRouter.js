@@ -51,13 +51,14 @@ userRouter.route('/signup')
 				url = s3Data.Location;
 				resolve(Photo.create({ url: url }));
 			});
+     
 		})
 			.then(photo => {
-        console.log(photo);
 				photoDb = photo;
+				console.log(photo);
 				let results = superagent.post(`https://api-us.faceplusplus.com/facepp/v3/detect?api_key=${APP_KEY}&api_secret=${APP_SECRET}&image_url=${url}`);
 				return results;
-      })
+			})
 			.then(results => {
         	return User.create({
 					username: req.body.username,
@@ -75,7 +76,54 @@ userRouter.route('/signup')
         console.log('msg === ',apiMsg);
         res.status(apiMsg.status).send(apiMsg.msg);
       });
+  });
+  
+userRouter.route('/signin').post(upload.single('photo'), (req, res) => { // if the upload doesn't return a photo send error
+	let ext = path.extname(req.file.originalname);
+	let params = {
+		ACL: 'public-read',
+		Bucket: process.env.AWS_BUCKET,
+		Key: `${req.file.filename}${ext}`,
+		Body: fs.createReadStream(req.file.path)
+	};
+	console.log('username signup login', req.body.username);
+	User.findOne({username: req.body.username}).then(temp =>{
+		console.log('temp value', temp);
+		// let signedUser = temp._id.facetoken;
+		let signedUser = temp.facetoken;
+		console.log('facetoken of signed user', signedUser);
+		let url;
+		let photoDb;
+		new Promise((resolve, reject) => {
+			s3.upload(params, (err, s3Data) => {
+				url = s3Data.Location;
+				resolve(Photo.create({ url: url }));
+			});
+		})
+			.then(photo => {
+				console.log('object', photo);
+				photoDb = photo;
+				let results = superagent.post(`https://api-us.faceplusplus.com/facepp/v3/compare?api_key=${APP_KEY}&api_secret=${APP_SECRET}&image_url1=${url}&face_token2=${signedUser}`);
+				return results;
+			})
+			.then(results => {
+        console.log('match confidence',results);
+         let threshold = [{low : '1e-3'},{med :'1e-4'},{high :'1e-5'}];
+				if(threshold.includes(results.threshold)){
+      
+				}
+			})
+			.then(user => {
+				res.status(200).send(user);
+			})
+			.catch(err => {
+				console.log('Error === ', err.response.body.error_message);
+				let msg = apiError(err.response.body);
+				console.log('msg === ',msg);
+				res.status(msg.status).send(msg.msg);
+			});
 	});
+});	
 
 
 userRouter.route('/face/:id')
@@ -86,7 +134,7 @@ userRouter.route('/face/:id')
 				.catch(err => res.status(400).send(err.message));
 		}
 	})
-
+// if we are only updating the photo in their profile, not sure this put route is used
 	.put(bearerAuth, (req, res) => {
 		let id = req.params.id;
 		User.findByIdAndUpdate(id, req.body, {
@@ -97,7 +145,10 @@ userRouter.route('/face/:id')
 	})
 
 	.delete(bearerAuth, (req, res) => {
-		User.findByIdAndRemove(req.params.id)
+    console.log(req.params.id)
+    superagent.route('/user').delete(req, res)
+      .then(user => {
+        User.findByIdAndRemove(req.params.id)
 			.then(user => {
 				if (website.userId.toString() === req.user.id.toString()) {
 					return user.remove();
@@ -105,6 +156,10 @@ userRouter.route('/face/:id')
 			})
 			.then(() => res.status(200))
 			.catch(err => res.status(500).send(err.message));
-	});
+  });
+});
+  
+  
+
 
 module.exports = userRouter;
