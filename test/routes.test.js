@@ -31,7 +31,7 @@ function SignInParamsRight() {
 	return {
 		username: 'elephant',
     password: '1234',
-    photo: 'https://faceit-app.s3.amazonaws.com/55a1e5673dc0e5164c0197fcd7f6d1a9.jpg'//correct image associated
+    photo: 'https://faceit-app.s3.amazonaws.com/358dfa9dc781d2f4d0e979bdae3b74aa.jpg'//correct image associated
 	};
 };
 
@@ -39,7 +39,7 @@ function SignInParamsWrong() {
 	return {
 		username: 'portman',
     password: '1234',
-    photo: 'https://faceit-app.s3.amazonaws.com/358dfa9dc781d2f4d0e979bdae3b74aa.jpg'//wrong image associated
+    photo: 'https://faceit-app.s3.amazonaws.com/55a1e5673dc0e5164c0197fcd7f6d1a9.jpg'//wrong image associated
 	};
 };
 
