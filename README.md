@@ -4,14 +4,14 @@
 **Version**: 1.1.0
 
 ## Table of Contents
-* [Team Members] (#Team-Members)
-* [Contributors] (#Contributors)
-* [Technologies Used] (#Technologies-Used)
-* [Overview] (#Overview)
-  * [Problem Domain] (#Problem-Domain)
-  * [User Stories] (#User-Stories)
-* [How to use our API] (#How-to-Use-Our-API)
-* [Project Details] (#Project-Details)
+* [Team Members](#Team-Members)
+* [Contributors](#Contributors)
+* [Technologies Used](#Technologies-Used)
+* [Overview](#Overview)
+  * [Problem Domain](#Problem-Domain)
+  * [User Stories](#User-Stories)
+* [How to use our API](#How-to-Use-Our-API)
+* [Project Details](#Project-Details)
 
 ## Team Members
 * Alicia Lycan https://github.com/alicialycan
