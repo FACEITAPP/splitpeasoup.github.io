@@ -35,7 +35,72 @@ userRouter.route('/faces')
 		})
 			.then(users => res.status(200).send(users))
 			.catch(err => res.sendStatus(404).send(err.message));
-	});
+  });
+  
+  userRouter.route('/signup-upload').post(upload.single('photo'), (req, res) => { // if the upload doesn't return a photo send error
+	let ext = path.extname(req.file.originalname);
+	let params = {
+		ACL: 'public-read',
+		Bucket: process.env.AWS_BUCKET,
+		Key: `${req.file.filename}${ext}`,
+		Body: fs.createReadStream(req.file.path)
+  };
+  let url;
+return new Promise((resolve, reject) => {
+		s3.upload(params, (err, s3Data) => {
+			url = s3Data.Location;
+			resolve(Photo.create({ url: url }));
+    })
+  })
+    .then(photo => {
+      res.status(200).send(photo.url);
+      let photourl = photo.url;
+      return photourl;
+		})
+		.catch(err => {
+			console.log('Error === ', err.response.body.error_message);
+			let msg = apiError(err.response.body);
+			console.log('msg === ',msg);
+			res.status(msg.status).send(msg.msg);
+		});
+  })
+
+  userRouter.route('/signup-with-face').get(basicAuth, (req, res) => {  
+  
+    let url = req.headers.photo;
+    superagent.post(`https://api-us.faceplusplus.com/facepp/v3/detect?api_key=${APP_KEY}&api_secret=${APP_SECRET}&image_url=${url}`)
+			.then(results => {
+        	return User.create({
+					username: req.body.username,
+					password: req.body.password,
+					facetoken: results.body.faces[0].face_token,
+					photo: req.headers.photo
+        });
+      })
+  .then(success => {
+    console.log("success", success)
+    if(success){
+      let user = req.user;
+
+      let payload = { userId: user._id };
+      let token = jwt.sign(payload, process.env.SECRET);
+      
+      res.status(200).send(token);
+    }
+    else{
+      res.status(403).send("Authentication Failure");
+    } 
+    
+  })
+  .catch(err => {
+    console.log("error was thrown", err);
+    // console.log('Error === ', err.response.body.error_message);
+    // let msg = apiError(err.response.body);
+    // console.log('msg === ',msg);
+    // res.status(msg.status).send(msg.msg);
+  });
+});
+
 
 userRouter.route('/signup')
 	.post(upload.single('photo'), (req, res) => { // if the upload doesn't return a photo send error
@@ -70,7 +135,22 @@ userRouter.route('/signup')
 					facetoken: results.body.faces[0].face_token,
 					photo: photoDb
 				});
-			})
+      })
+      .then(success => {
+        console.log("success", success)
+        if(success){
+          let user = req.user;
+  
+          let payload = { userId: user._id };
+          let token = jwt.sign(payload, process.env.SECRET);
+          
+          res.status(200).send(token);
+        }
+        else{
+          res.status(403).send("Authentication Failure");
+        } 
+        
+      })
 			.then(user => {
 				res.status(200).send(user);
 			})
@@ -89,7 +169,8 @@ const m1 = (req, res, next) => {
 
 const m2 = (req, res, next) => {
 	console.log("middleware 2");
-	next();
+  next();
+
 }
 
 userRouter.route('/signin-upload').post(upload.single('photo'), (req, res) => { // if the upload doesn't return a photo send error
@@ -108,7 +189,9 @@ return new Promise((resolve, reject) => {
     })
   })
     .then(photo => {
-			res.status(200).send(photo.url);
+      res.status(200).send(photo.url);
+      let photourl = photo.url;
+      return photourl;
 		})
 		.catch(err => {
 			console.log('Error === ', err.response.body.error_message);
@@ -118,7 +201,9 @@ return new Promise((resolve, reject) => {
 		});
 	})
 
-userRouter.route('/signin-with-face').get(basicAuth, (req, res) => {  let url = req.headers.photo;
+userRouter.route('/signin-with-face').get(basicAuth, (req, res) => {  
+      console.log('heyo');
+      let url = req.headers.photo;
       let signedUser = req.user.facetoken;
       superagent.post(`https://api-us.faceplusplus.com/facepp/v3/compare?api_key=${APP_KEY}&api_secret=${APP_SECRET}&image_url1=${url}&face_token2=${signedUser}`)
 		.then(results => {
@@ -151,16 +236,14 @@ userRouter.route('/signin-with-face').get(basicAuth, (req, res) => {  let url = 
 			// console.log('msg === ',msg);
 			// res.status(msg.status).send(msg.msg);
 		});
+
 });
 
-
-userRouter.route('/face/:id')
+userRouter.route('/face/person')
 	.get(bearerAuth, (req, res) => {
-		if (req.params.id) {
-			return User.findById(req.params.id)
-				.then(user => res.status(200).send(user))
-				.catch(err => res.status(400).send(err.message));
-		}
+
+				res.status(200).send(req.user)
+				
 	})
 // if we are only updating the photo in their profile, not sure this put route is used
 	.put(bearerAuth, (req, res) => {
