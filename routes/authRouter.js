@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const User = require('../models/userSchema.js');
 const jwt = require('jsonwebtoken');
 const basicAuth = require('../lib/basic-auth-middleware');
-const bearer= require('../lib/bearer-auth-middleware');
+const bearerAuth = require('../lib/bearer-auth-middleware');
 
 const authRouter = new express.Router();
 
@@ -20,39 +20,13 @@ authRouter.route('/signin')
   });
 
 authRouter.route('/panel')
-	.get((req, res) => {
+	.get(bearerAuth, (req, res) => {
 		if (!req.user) {
 			res.status(404); 
 			res.send('Not authorized');
 			return;
     }
-    
-		let authHeader = req.get('Authorization');
-		if (!authHeader) {
-			res.status(401);
-			res.send('Please provide a username/password');
-			return;
-		}
-		let payload = authHeader.split('Basic ')[1];
-		console.log('payload', payload)
-		let decoded = Buffer.from(payload, 'base64')
-			.toString();
-		let [username, password] = decoded.split(':');
-
-		User.findOne({username})
-		console.log('username', username)
-			.then(user => {
-				console.log('user', user);
-				if (user === null) {
-					res.send('user not found');
-				}
-				user.checkPassword(password)
-				console.log('password', password)
-					.then(token => {
-						res.send(token);
-					})
-					.catch(err => res.status(401).send(err.message));
-    	});
-	});
+		res.status(200).send({msg:'token works!'});
+});
 
 module.exports = authRouter;

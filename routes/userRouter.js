@@ -63,15 +63,14 @@ return new Promise((resolve, reject) => {
   })
 
   userRouter.route('/signup-with-face').get(basicAuth, (req, res) => {  
-  
     let url = req.headers.photo;
     superagent.post(`https://api-us.faceplusplus.com/facepp/v3/detect?api_key=${APP_KEY}&api_secret=${APP_SECRET}&image_url=${url}`)
 			.then(results => {
         	return User.create({
-					username: req.body.username,
-					password: req.body.password,
+					username: req.username,
+					password: req.password,
 					facetoken: results.body.faces[0].face_token,
-					photo: req.headers.photo
+					photo: new Photo({url:url})
         });
       })
   .then(success => {
@@ -101,6 +100,10 @@ return new Promise((resolve, reject) => {
 
 userRouter.route('/signup')
 	.post(upload.single('photo'), (req, res) => { // if the upload doesn't return a photo send error
+		if (!req.body.username || !req.body.password) {
+			return res.status(400).send({msg: "Must have username/password."});
+		}
+	
 		let ext = path.extname(req.file.originalname);
 		let params = {
 			ACL: 'public-read',
@@ -120,11 +123,12 @@ userRouter.route('/signup')
 		})
 			.then(photo => {
 				photoDb = photo;
-				console.log(photo);
+				console.log('signup photo', photo);
 				let results = superagent.post(`https://api-us.faceplusplus.com/facepp/v3/detect?api_key=${APP_KEY}&api_secret=${APP_SECRET}&image_url=${url}`);
 				return results;
 			})
 			.then(results => {
+					console.log("signup req body", req.body)
         	return User.create({
 					username: req.body.username,
 					password: req.body.password,
@@ -151,7 +155,10 @@ userRouter.route('/signup')
 				res.status(200).send(user);
 			})
 			.catch(err => {
-        console.log('Error === ', err.response.body.error_message);
+				if (!err || !err.response) {
+					res.status(500).send({msg: "Internal server error", err: err});
+					return;
+				}
         let apiMsg = apiError(err.response.body);
         console.log('msg === ', apiMsg);
         res.status(apiMsg.status).send(apiMsg.msg);
@@ -179,10 +186,10 @@ return new Promise((resolve, reject) => {
       return photourl;
 		})
 		.catch(err => {
-			console.log('Error === ', err.response.body.error_message);
-			let msg = apiError(err.response.body);
-			console.log('msg === ',msg);
-			res.status(msg.status).send(msg.msg);
+			console.log('error', {msg: err});
+			// let msg = apiError(err.response.body);
+			// console.log('msg === ',msg);
+			// res.status(msg.status).send(msg.msg);
 		});
 	})
 
