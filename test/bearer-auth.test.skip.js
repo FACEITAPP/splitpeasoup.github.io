@@ -65,7 +65,7 @@ describe('Bearer Auth', () => {
   });
 
   describe('Handle valid authorization', () => {
-    test.only('sends 200 for authorized GET request made with a valid id', (done) => {
+    test('sends 200 for authorized GET request made with a valid id', (done) => {
       let newUser = getUserParams();
       // let userId;
       let token;
@@ -78,11 +78,9 @@ describe('Bearer Auth', () => {
             .auth(res.body.username, res.body.password, res.body.photo) // test for undefined for username, null, unknown (isn't in db already)
             .end((err, res) => {
               if (err) {
-                console.error('error', err);
                 fail();
               }
               token = res.body.token;
-              console.log('token', res.body.token)
               expect(res.status).toBe(200);
               expect(token).toBeDefined();
               done();
@@ -159,15 +157,4 @@ describe('Bearer Auth', () => {
   //           });
   //       });
   //   });
-
-  //   test('sends 200 for authorized PUT request made with a valid id', (done) => {
-  //     expect(true).toBe(false);
-  //     done();
-  //   });
-
-  //   test('STRETCH: should return array of ids for /api/face', (done) => {
-  //     expect(true).toBe(false);
-  //     done();
-  //   });
-  // });
 });
