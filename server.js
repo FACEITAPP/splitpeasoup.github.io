@@ -12,7 +12,7 @@ const PORT = process.env.PORT;
 
 const app = express();
 
-app.use(express.static('lib'));
+app.use(express.static('frontendview'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
