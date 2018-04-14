@@ -65,16 +65,12 @@ describe('Basic Auth', () => {
       let newUser = getUserParams();
       delete newUser['username'];
       signUpUser(newUser)
-      .end((err, res) => {
-        if (err) {
-          console.error('User not successfully signed up', err)
-        };
-          expect(res.status).toBe(400);
-          done();
+          .then(res => {
+              expect(res.status).toBe(400);
+              done();
+          });
       });
-    });
   });
-
 
   describe('/api/signin', () => {
     it('should return status 400 if missing username', done => {
