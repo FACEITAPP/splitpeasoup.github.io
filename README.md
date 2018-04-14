@@ -6,8 +6,10 @@
 ## Table of Contents
 * [Team Members] (#Team-Members)
 * [Contributors] (#Contributors)
-* [Overview] (#Overview)
 * [Technologies Used] (#Technologies-Used)
+* [Overview] (#Overview)
+  * [Problem Domain] (#Problem-Domain)
+  * [User Stories] (#User-Stories)
 * [How to use our API] (#How-to-Use-Our-API)
 * [Project Details] (#Project-Details)
 
@@ -40,7 +42,6 @@
 * Bcrypt
 * JWT
 
-
 ## Overview
 
 ## Problem Domain:
@@ -52,7 +53,7 @@ The App will also generate a bearer token so the user will be recognized as bein
 - I will then sign into the app using that username and password and will supply another (or the same) photo. My second photo will then be compared against the return from the first photo and if they match I will be able to login. If they do not match I will be alerted they do not match.
 - Once I have successfully signed in, I want the app to know that I have successfully signed in so I can move about the app without being prompted to login again.
 
-## How to Use Our APP
+## How to Use Our API
 
 ### POST request to create a new user sign up
 - User will be presented with an HTML form where they will be prompted to supply a Username, Password and a photo.
