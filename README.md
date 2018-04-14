@@ -1,6 +1,4 @@
-
 # Faceit
-#### splitpeasoup.github.io
 
 ## A facial recognition authorization tool.
 **Version**: 1.1.0
@@ -47,6 +45,7 @@
 * Bcrypt
 * JWT
 
+
 ## Problem Domain:
 
 Create an App that will incorporate Username/Password security along with facial recognition. Users username, hashed password and the return value from the facial recognition API will be stored in a MongoDB.
@@ -61,7 +60,8 @@ The App will also generate a bearer token so the user will be recognized as bein
 
 ## How to Use Our APP
 
-### POST request to create a new user sign up
+### POST request to create a new user
+
 - User will be presented with an HTML form where they will be prompted to supply a Username, Password and a photo.
 
 - The username and password will be passed into the Create User MongoDB schema and prior to being saved the password will be hashed using BCrypt.
@@ -80,3 +80,9 @@ The App will also generate a bearer token so the user will be recognized as bein
  
  - If the match threshold is within accepted range and the user has an authorization token the user will be considered logged in.
  
+
+
+### POST request to create a new user sign up
+
+`
+
