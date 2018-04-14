@@ -8,15 +8,15 @@
 </head>
 <h1>Faces Form</h1>
 <body>
-  <h1 id="signup">Sign Up</h1>
-    <form action="/api/signup" method="POST" enctype="multipart/form-data">
+  <h1>Sign Up</h1>
+    <form action="/api/signup" method="POST" enctype="multipart/form-data" id="signup">
       <input type="text" name="username" placeholder="username"/>
       <input type="password" name="password" placeholder="password" />
       <input type="file" name="photo" />
       <input type="submit" />
     </form>
-  <h1 id="signin">Sign In</h1>
-  <form action="/api/signin" method="POST" enctype="multipart/form-data">
+  <h1>Sign In</h1>
+  <form action="/api/signin" method="POST" enctype="multipart/form-data" id="signin">
     <input type="text" name="username" placeholder="username"/>
     <input type="password" name="password" placeholder="password" />
     <input type="file" name="photo" />
@@ -41,6 +41,6 @@
     <input type = "submit">
   </form>
     <form action = "/face/:id" method="DELETE" id= "user controls"><button action= "submit">Delete User</button></form>
-  <script src="/main.js"></script>
+  <!-- <script src="/main.js"></script> -->
   </body>
 </html>

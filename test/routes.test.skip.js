@@ -17,11 +17,11 @@ const faker = require('faker');
 
 
 
-function SignUpParams() {
+function SignUpParamsGet() {
   let fakerImage = faker.image.people();
   console.log('fakerImage',fakerImage);
 	return {
-		username: '' + Math.random(),
+		username: 'Henry' + Math.random(),
     password: 'trees',
     photo: fakerImage
 	};
@@ -48,15 +48,33 @@ describe('creates new user',()=>{
   afterAll(server.stop);
 
 	test('userRouter signup post indicates successful completion of signup route by return status 200',(done)=> {
-    let newUser = SignInParamsRight();
-    superagent.post(SERVER_URL + '/api/signup')
+    let newUser = SignUpParamsGet();
+    superagent.post(SERVER_URL + '/api/signup-upload')
     .set('Content-Type', 'application/json')
     .auth(newUser.username, newUser.password)
     .field('username', newUser.username)
     .field('password', newUser.password)
     .attach('photo', newUser.photo)
+    .end((err,res)=>{
+      expect(res.status).toBe(200);
+      console.log('err', err);
+    })
+    // need to add .then to pull these parameters into the signup get route
   })
-  test('userRouter signin post indicates successful completion of signup route by return status 200',(done)=> {
+  test('userRouter signup get indicates successful completion of signup route by return status 200',(done)=> {
+    let newUser = SignInParamsRight();
+    superagent.get(SERVER_URL + '/api/signup-with-face')
+    .set('Content-Type', 'application/json')
+    .auth(newUser.username, newUser.password)
+    .field('username', newUser.username)
+    .field('password', newUser.password)
+    .attach('photo', newUser.photo)
+    .end((err,res)=>{
+      expect(res.status).toBe(200);
+      console.log('err', err);
+    })
+  })
+  test('userRouter signin post indicates successful completion of signup route by return status 200',(res,done)=> {
     let user = SignInParamsRight();
     superagent.post(SERVER_URL + '/signin-with-face')
         .auth(user.username, user.password)
