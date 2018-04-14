@@ -8,7 +8,6 @@ const superagent = require('superagent');
 const User = require('../models/userSchema.js');
 const Photo = require('../models/photoSchema.js');
 const request = require('superagent');
-require('dotenv').config(); 
 const APP_KEY = process.env.FACEAPI_KEY;
 const APP_SECRET = process.env.FACEAPI_SECRET;
 const userRouter = new express.Router();
@@ -25,8 +24,6 @@ const upload = multer({
 });
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
-
-
 
 userRouter.route('/faces')
 	.get(bearerAuth, (req, res) => {
@@ -128,7 +125,6 @@ userRouter.route('/signup')
 				return results;
 			})
 			.then(results => {
-				console.log('req.body!!!!!!!', req.body);
         	return User.create({
 					username: req.body.username,
 					password: req.body.password,
@@ -157,21 +153,10 @@ userRouter.route('/signup')
 			.catch(err => {
         console.log('Error === ', err.response.body.error_message);
         let apiMsg = apiError(err.response.body);
-        console.log('msg === ',apiMsg);
+        console.log('msg === ', apiMsg);
         res.status(apiMsg.status).send(apiMsg.msg);
       });
   });
-
-const m1 = (req, res, next) => {
-	console.log("middleware 1");
-	next();
-}
-
-const m2 = (req, res, next) => {
-	console.log("middleware 2");
-  next();
-
-}
 
 userRouter.route('/signin-upload').post(upload.single('photo'), (req, res) => { // if the upload doesn't return a photo send error
 	let ext = path.extname(req.file.originalname);
@@ -207,7 +192,7 @@ userRouter.route('/signin-with-face').get(basicAuth, (req, res) => {
       let signedUser = req.user.facetoken;
       superagent.post(`https://api-us.faceplusplus.com/facepp/v3/compare?api_key=${APP_KEY}&api_secret=${APP_SECRET}&image_url1=${url}&face_token2=${signedUser}`)
 		.then(results => {
-      console.log('match confidence',results.body.confidence);
+      console.log('match confidence', results.body.confidence);
       if(results.body.confidence > 95){
        return true;
       }
@@ -215,7 +200,6 @@ userRouter.route('/signin-with-face').get(basicAuth, (req, res) => {
       
 		})
 		.then(success => {
-      console.log("success", success)
       if(success){
         let user = req.user;
 
@@ -256,7 +240,6 @@ userRouter.route('/face/person')
 	})
 
 	.delete(bearerAuth, (req, res) => {
-    console.log(req.params.id)
     superagent.route('/user').delete(req, res)
       .then(user => {
         User.findByIdAndRemove(req.params.id)
@@ -269,6 +252,5 @@ userRouter.route('/face/person')
 			.catch(err => res.status(500).send(err.message));
   });
 });
-
 
 module.exports = userRouter;

@@ -10,8 +10,6 @@ const photoRouter = require('./routes/photoRouter.js');
 const MONGODB_URI = process.env.MONGODB_URI;
 const PORT = process.env.PORT;
 
-// mongoose.connect(process.env.MONGODB_URI);
-
 const app = express();
 
 app.use(express.static('frontendview'));
@@ -24,10 +22,6 @@ app.use(bodyParser.urlencoded({
 app.use('/api', userRouter);
 app.use('/api', authRouter);
 app.use('/api', photoRouter);
-
-// app.listen(PORT, () => {
-//   console.log('http://localhost:' + process.env.PORT);
-// });
 
 const server = module.exports = {}
 server.isOn = false;

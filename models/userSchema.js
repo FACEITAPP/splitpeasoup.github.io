@@ -39,7 +39,7 @@ userSchema.pre('save', function (next) {
 			next();
 		});
 	} else {
-		console.log('user is not new!')
+		console.log('user is already in database!')
 		next();
 	}
 });
