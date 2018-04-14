@@ -4,8 +4,8 @@ const superagent = require('superagent');
 const btoa = require('btoa');
 const PORT = process.env.PORT || 3000;
 const SERVER_URL = 'http://localhost:' + PORT;
-const SIGNUP_URL = SERVER_URL + '/api/signup';
-const SIGNIN_URL = SERVER_URL + '/api/signin';
+const SIGNUP_URL = SERVER_URL + '/api/signup-with-face';
+const SIGNIN_URL = SERVER_URL + '/api/signin-with-face';
 const PANEL_URL = SERVER_URL + '/api/panel';
 const auth = require('../routes/authRouter.js');
 
@@ -13,64 +13,84 @@ function getUserParams() {
   return {
     username: 'Bradley' + Math.random(),
     password: 'trees',
-    photo: {image: 'baker.jpg'}
+    // photo: {url: 'baker.jpg'}
   };
 };
   
-function signUpUser(newUser) {
-  let imageLocation = './uploads/baker.jpg';
-  return superagent
-  .post(SIGNUP_URL)
-  .set('Content-Type', 'application/json')
-  .auth(newUser.username, newUser.password)
-  .field('username', newUser.username)
-  .field('password', newUser.password)
-  .attach('photo', imageLocation)
-};
+// function signUpUser(newUser) {
+//   let imageLocation = './uploads/baker.jpg';
+//   return superagent
+//   .post(SIGNUP_URL)
+//   .set('Content-Type', 'application/json')
+//   .auth(newUser.username, newUser.password)
+//   .field('username', newUser.username)
+//   .field('password', newUser.password)
+//   .attach('photo', imageLocation)
+// };
 
-function signIn(newUser) {
+function signInUser(newUser) {
   let payload = newUser['username'] + ':' + newUser['password'];
   let encoded = btoa(payload);
   return superagent
-  .get(PANEL_URL)
+  .get(SIGNIN_URL)
   .set('Authorization', 'Basic ' + encoded)
-  .auth(newUser.username, newUser.password)
-  .field('username', newUser.username)
-  .field('password', newUser.password)
-  .attach('photo', imageLocation)
+  .set('photo', 'https://faceit-app.s3.amazonaws.com/358dfa9dc781d2f4d0e979bdae3b74aa.jpg')
 };
 
 describe('Basic Auth', () => {
   beforeAll(server.start);
   afterAll(server.stop);
 
-  describe('sends 200 when user successfully signs up on /signup', () => {
+  describe('test /signup-with-face', () => {
     it('sends 200 for authorized GET request made with a valid id', (done) => {
       let newUser = getUserParams();
-        signUpUser(newUser)
-        .end((err, res) => {
+      let payload = newUser['username'] + ':' + newUser['password'];
+      let encoded = btoa(payload);
+      superagent
+      .get(SIGNUP_URL)
+      .set('Authorization', 'Basic ' + encoded)
+      .set('photo', 'https://faceit-app.s3.amazonaws.com/358dfa9dc781d2f4d0e979bdae3b74aa.jpg')
+            
+      .end((err, res) => {
           if (err) {
             console.error('User not successfully signed up', err)
           };
           expect(res.status).toBe(200);
-          expect(res.body.username).toBe(newUser.username);
-          expect(res.body.password).toBeDefined();
-          expect(res.body.password).not.toBe(newUser.password);
-          expect(res.body.photo).toBeDefined();
           done();
       });
     });
 
-    it.only('should return status 400 if missing username', (done) => {
+    it('should return status 400 if missing password', (done) => {
       let newUser = getUserParams();
-      delete newUser['username'];
-      signUpUser(newUser)
-          .then(res => {
-              expect(res.status).toBe(400);
-              done();
-          });
+      let imageLocation = './uploads/baker.jpg';
+      return superagent
+      .post(SIGNUP_URL)
+      .set('Content-Type', 'application/json')
+      .auth(newUser.username, newUser.password)
+      .field('username', newUser.username)
+      .attach('photo', imageLocation)
+      .catch(res => {
+        expect(res.status).toBe(400);
+        done();
       });
   });
+
+    it('should return status 400 if missing username', (done) => {
+      let newUser = getUserParams();
+      delete newUser['username'];      
+      let imageLocation = './uploads/baker.jpg';
+      superagent
+      .post(SIGNUP_URL)
+      .set('Content-Type', 'application/json')
+      .auth(newUser.username, newUser.password)
+      .field('password', newUser.password)
+      .attach('photo', imageLocation)
+      .catch(res => {
+        expect(res.status).toBe(400);
+        done();
+      });
+  });
+});
 
   describe('/api/signin', () => {
     it('should return status 400 if missing username', done => {
@@ -113,25 +133,16 @@ describe('Basic Auth', () => {
 
     it('should return status 200 with successful request', done => {
       let newUser = getUserParams();
-      signUpUser(newUser)
+      let token = signInUser(newUser)
       .end((err, res) => {
-        return superagent
-        .get(SIGNIN_URL)
-        .set('Content-Type', 'application/json')
-        .auth(newUser.username, newUser.password)
-        .end((err, res) => {
           if (err) {
-            console.error('error', err);
-          }
-          token = res.body.token;
-          console.log('response', res.body)
-          console.log('token', res.body.token)
+            console.error('User not successfully signed in', err)
+          };
           expect(res.status).toBe(200);
           expect(token).toBeDefined();
           done();
         })
       });
-    });
   });
 
   // describe('/api/panel', () => {
