@@ -12,7 +12,6 @@ const APP_KEY = process.env.FACEAPI_KEY;
 const APP_SECRET = process.env.FACEAPI_SECRET;
 const userRouter = new express.Router();
 const jwt = require('jsonwebtoken');
-const basicAuth = require('../lib/basic-auth-middleware');
 const bearerAuth = require('../lib/bearer-auth-middleware.js');
 const authRouter = require('../routes/authRouter.js');
 const apiError = require('../lib/api-error-handler.js')
@@ -34,77 +33,22 @@ userRouter.route('/faces')
 			.catch(err => res.sendStatus(404).send(err.message));
   });
   
-  userRouter.route('/signup-upload').post(upload.single('photo'), (req, res) => { // if the upload doesn't return a photo send error
-	let ext = path.extname(req.file.originalname);
-	let params = {
-		ACL: 'public-read',
-		Bucket: process.env.AWS_BUCKET,
-		Key: `${req.file.filename}${ext}`,
-		Body: fs.createReadStream(req.file.path)
-  };
-  let url;
-return new Promise((resolve, reject) => {
-		s3.upload(params, (err, s3Data) => {
-			url = s3Data.Location;
-			resolve(Photo.create({ url: url }));
-    })
-  })
-    .then(photo => {
-      res.status(200).send(photo.url);
-      let photourl = photo.url;
-      return photourl;
-		})
-		.catch(err => {
-			console.log("error was thrown", err);
-			// let msg = apiError(err.response.body);
-			// console.log('msg === ',msg);
-			// res.status(msg.status).send(msg.msg);
-		});
-  })
-
-  userRouter.route('/signup-with-face').get((req, res) => {  
-		let authHeader = req.get('Authorization');
-		let payload = authHeader.split('Basic ')[1];
-		let decoded = Buffer.from(payload, 'base64').toString();
-		let [username, password] = decoded.split(':');
-
-    let url = req.headers.photo;
-    superagent.post(`https://api-us.faceplusplus.com/facepp/v3/detect?api_key=${APP_KEY}&api_secret=${APP_SECRET}&image_url=${url}`)
-			.then(results => {
-        	return User.create({
-					username: username,
-					password: password,
-					facetoken: results.body.faces[0].face_token,
-					photo: new Photo({url:url})
-        });
-      })
-  .then(success => {
-    console.log("success", success)
-    if(success){
-      let user = success;
-      let payload = { userId: user._id };
-			let token = jwt.sign(payload, process.env.SECRET);
-			console.log('sending token')
-			return res.status(200).send(token);
-			
-    }
-    else{
-			console.log('sending auth failure')
-      res.status(403).send("Authentication Failure");
-    } 
-  })
-  .catch(err => {
-    console.log("error was thrown", err);
-  });
-});
-
 
 userRouter.route('/signup')
-	.post(upload.single('photo'), (req, res) => { // if the upload doesn't return a photo send error
-		if (!req.body.username || !req.body.password) {
-			return res.status(400).send({msg: "Must have username/password."});
-		}
-	
+	.post(upload.single('photo'), (req, res) => { 
+    let authHeader = req.get('Authorization');
+    let payload = authHeader.split('Basic ')[1];
+    let decoded = Buffer.from(payload, 'base64').toString();
+    let [username, password] = decoded.split(':');
+  
+    if (!username || !password) {
+      res.status(400);
+      let msg = 'username and password required to create an account';
+      console.log('signin error:', {msg});
+      res.send(msg);
+      return;
+    }
+
 		let ext = path.extname(req.file.originalname);
 		let params = {
 			ACL: 'public-read',
@@ -121,7 +65,7 @@ userRouter.route('/signup')
 				resolve(Photo.create({ url: url }));
 			});
      
-		})
+    })
 			.then(photo => {
 				photoDb = photo;
 				console.log('signup photo', photo);
@@ -159,36 +103,46 @@ userRouter.route('/signup')
       });
   });
 
-userRouter.route('/signin-upload').post(upload.single('photo'), (req, res) => { // if the upload doesn't return a photo send error
-console.log('reqfile', req.file);
-	let ext = path.extname(req.file.originalname);
-	let params = {
-		ACL: 'public-read',
-		Bucket: process.env.AWS_BUCKET,
-		Key: `${req.file.filename}${ext}`,
-		Body: fs.createReadStream(req.file.path)
-  };
-  let url;
-return new Promise((resolve, reject) => {
-		s3.upload(params, (err, s3Data) => {
-			url = s3Data.Location;
-			resolve(Photo.create({ url: url }));
-    })
-  })
-    .then(photo => {
-      res.status(200).send(photo.url);
-      let photourl = photo.url;
-      return photourl;
-		})
-		.catch(err => {
-			console.log('error', {msg: err});
-			// let msg = apiError(err.response.body);
-			// console.log('msg === ',msg);
-			// res.status(msg.status).send(msg.msg);
-		});
-	});
 
-userRouter.route('/signin-with-face').get(basicAuth, (req, res) => {  
+
+userRouter.route('/signin').post(upload.single('photo'), (req, res) => {
+let authHeader = req.get('Authorization');
+let payload = authHeader.split('Basic ')[1];
+let decoded = Buffer.from(payload, 'base64').toString();
+let [username, password] = decoded.split(':');
+
+if (!username || !password) {
+  res.status(400);
+  let msg = 'username and password required to create an account';
+  console.log('signin error:', {msg});
+  res.send(msg);
+  return;
+}
+User.findOne({username: username})
+.then(user => {
+  if (user === null) {
+    console.log('sending user not found in auth middleware')
+    res.send({msg:'user not found'});
+    return;
+  }
+  return user.checkPassword(password);
+})
+.then(user =>{
+let ext = path.extname(req.file.originalname);
+let params = {
+  ACL: 'public-read',
+  Bucket: process.env.AWS_BUCKET,
+  Key: `${req.file.filename}${ext}`,
+  Body: fs.createReadStream(req.file.path)
+};
+let url;
+return new Promise((resolve, reject) => {
+  s3.upload(params, (err, s3Data) => {
+    url = s3Data.Location;
+    resolve(Photo.create({ url: url }));
+  })
+})
+.then(() => {
       console.log('heyo');
       let url = req.headers.photo;
       let signedUser = req.user.facetoken;
@@ -199,7 +153,8 @@ userRouter.route('/signin-with-face').get(basicAuth, (req, res) => {
        return true;
       }
      return false;
-		})
+    })
+  })
 		.then(success => {
       if(success){
         let user = req.user;
@@ -220,6 +175,7 @@ userRouter.route('/signin-with-face').get(basicAuth, (req, res) => {
 			// console.log('msg === ',msg);
 			// res.status(msg.status).send(msg.msg);
 		});
+});
 });
 
 userRouter.route('/face/person')
