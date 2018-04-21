@@ -8,17 +8,16 @@ const server = require('../server.js');
 const superagent = require('superagent');
 const PORT = process.env.PORT || 3000;
 const SERVER_URL = 'http://localhost:' + PORT;
-const SIGNUP_URL = SERVER_URL + '/api/signup';
-const SIGNIN_URL = SERVER_URL + '/api/signin';
+const SIGNUP_URL = SERVER_URL + '/api/signup-with-face';
+const SIGNIN_URL = SERVER_URL + '/api/signin-with-face';
 const signUpUser = require('./basic-auth.test.js');
 
 function getUserParams() {
   return {
-    username: 'Buck' + Math.random(),
-    password: 'bambi',
-    photo: {image: 'baker.jpg'}
+    username: 'Bradley' + Math.random(),
+    password: 'trees',
+    // photo: {url: 'baker.jpg'}
   };
-};
 
 describe('Bearer Auth', () => {
   beforeAll(server.start);
@@ -83,6 +82,7 @@ describe('Bearer Auth', () => {
               token = res.body.token;
               expect(res.status).toBe(200);
               expect(token).toBeDefined();
+              expect(token.split(".").length).toEqual(3);
               done();
               // unknown username
               // password doesn't match unknown username
