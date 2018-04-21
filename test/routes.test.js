@@ -47,21 +47,19 @@ describe('creates new user',()=>{
   beforeAll(server.start);
   afterAll(server.stop);
 
-	test('userRouter signup post indicates successful completion of signup route by return status 200',(done)=> {
+	it.only('userRouter signup post indicates successful completion of signup route by return status 200',(done)=> {
     let newUser = SignUpParamsGet();
     superagent.post(SERVER_URL + '/api/signup-upload')
-    .set('Content-Type', 'application/json')
     .auth(newUser.username, newUser.password)
-    .field('username', newUser.username)
-    .field('password', newUser.password)
     .attach('photo', newUser.photo)
     .end((err,res)=>{
       expect(res.status).toBe(200);
       console.log('err', err);
+      done();
     })
     // need to add .then to pull these parameters into the signup get route
   })
-  test('userRouter signup get indicates successful completion of signup route by return status 200',(done)=> {
+  it('userRouter signup get indicates successful completion of signup route by return status 200',(done)=> {
     let newUser = SignInParamsRight();
     superagent.get(SERVER_URL + '/api/signup-with-face')
     .set('Content-Type', 'application/json')
@@ -74,7 +72,8 @@ describe('creates new user',()=>{
       console.log('err', err);
     })
   })
-  test('userRouter signin post indicates successful completion of signup route by return status 200',(res,done)=> {
+ 
+  it('userRouter signin post indicates successful completion of signup route by return status 200',(res,done)=> {
     let user = SignInParamsRight();
     superagent.post(SERVER_URL + '/signin-with-face')
         .auth(user.username, user.password)
@@ -84,7 +83,8 @@ describe('creates new user',()=>{
           expect(res.status).toBe(200);
           done();
   })
-  test('userRouter signin post indicates successful completion of signup route by return status 200',(done)=> {
+})
+  it('userRouter signin post indicates successful completion of signup route by return status 200',(done)=> {
     let user = SignInParamsWrong();
     superagent.post(SERVER_URL + '/signin-with-face')
         .auth(user.username, user.password)
@@ -96,19 +96,10 @@ describe('creates new user',()=>{
           done();
   })
   
-//   test('err catch',{
-//     let newUser = getUserParams();
+  })
 
+}
 
-// //may want this test outside the description body
-
-// })
-
-  // test('user is created and saved to database',{
-  //   getUserParams
-  //   //checkout database to see how to see a new entry
-  // })
-})
   
 
 

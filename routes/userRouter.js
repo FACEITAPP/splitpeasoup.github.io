@@ -55,10 +55,7 @@ return new Promise((resolve, reject) => {
       return photourl;
 		})
 		.catch(err => {
-			console.log('Error === ', err.response.body.error_message);
-			let msg = apiError(err.response.body);
-			console.log('msg === ',msg);
-			res.status(msg.status).send(msg.msg);
+      console.log("error was thrown", err);
 		});
   })
 
@@ -69,9 +66,9 @@ return new Promise((resolve, reject) => {
 			.then(results => {
         	return User.create({
 					username: req.body.username,
-					password: req.body.password,
+					password: req.body.password,               
 					facetoken: results.body.faces[0].face_token,
-					photo: req.headers.photo
+					photo:{url: url} 
         });
       })
   .then(success => {
