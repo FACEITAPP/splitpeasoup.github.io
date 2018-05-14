@@ -50,23 +50,22 @@ userRouter.route('/signup')
       return;
     }
 
-		// let ext = path.extname(req.file.originalname);
-		// let params = {
-		// 	ACL: 'public-read',
-		// 	Bucket: process.env.AWS_BUCKET,
-		// 	Key: `${req.file.filename}${ext}`,
-		// 	Body: fs.createReadStream(req.file.path)
-		// };
+		let ext = path.extname(req.file.originalname);
+		let params = {
+			ACL: 'public-read',
+			Bucket: process.env.AWS_BUCKET,
+			Key: `${req.file.filename}${ext}`,
+			Body: fs.createReadStream(req.file.path)
+		};
 		let url ='https://faceit-app.s3.amazonaws.com/1e1e36df4f1ef0d181640aac64c7f369.jpg';
 		let photoDb;
 		new Promise((resolve, reject) => {
-			// s3.upload(params, (err, s3Data) => {
-			// 	console.log('error', err)
-			// 	url = s3Data.Location;
-			// 	resolve(Photo.create({ url: url }));
-			// });
-      resolve(Photo.create({ url: url }))
-
+			s3.upload(params, (err, s3Data) => {
+				console.log('error', err)
+				url = s3Data.Location;
+				resolve(Photo.create({ url: url }));
+			});
+     
     })
 			.then(photo => {
 				photoDb = photo;
@@ -165,9 +164,9 @@ return new Promise((resolve, reject) => {
      return false;
     })
   })
-		.then(success => {
-      if(success){
-        console.log('success',success)
+		.then(() => {
+     
+      if(true){
         let payload = { userId: user._id };
         let token = jwt.sign(payload, process.env.SECRET);
         
