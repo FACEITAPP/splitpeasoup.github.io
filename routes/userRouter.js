@@ -123,15 +123,20 @@ if (!username || !password) {
   return;
 }
 User.findOne({username: username})
-.then(user => {
-  if (user === null) {
+.then(results => {
+    console.log('findOne results', results);
+  if (results === null) {
     console.log('sending user not found in auth middleware')
     res.send({msg:'user not found'});
     return;
   }
-  return user.checkPassword(password);
+  let user = results.checkPassword(password);
+
+  return user;
 })
 .then(user =>{
+  console.log('checkpassword result', user);
+  console.log("req.file", req.file);
 let ext = path.extname(req.file.originalname);
 let params = {
   ACL: 'public-read',
@@ -146,11 +151,12 @@ return new Promise((resolve, reject) => {
     resolve(Photo.create({ url: url }));
   })
 })
-.then(() => {
-      console.log('heyo');
-      let url = req.headers.photo;
-      let signedUser = req.user.facetoken;
-      superagent.post(`https://api-us.faceplusplus.com/facepp/v3/compare?api_key=${APP_KEY}&api_secret=${APP_SECRET}&image_url1=${url}&face_token2=${signedUser}`)
+.then(url => {
+      console.log('heyo', user.facetoken);
+      // let url = req.headers.photo;
+      console.log('url', url);
+      let signedUser = user.facetoken;
+      superagent.post(`https://api-us.faceplusplus.com/facepp/v3/compare?api_key=${APP_KEY}&api_secret=${APP_SECRET}&image_url1=${url.url}&face_token2=${signedUser}`)
 		.then(results => {
       console.log('match confidence', results.body.confidence);
       if(results.body.confidence > 95){
@@ -161,8 +167,7 @@ return new Promise((resolve, reject) => {
   })
 		.then(success => {
       if(success){
-        let user = req.user;
-
+        console.log('success',success)
         let payload = { userId: user._id };
         let token = jwt.sign(payload, process.env.SECRET);
         
