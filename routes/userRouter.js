@@ -87,7 +87,7 @@ userRouter.route('/signup')
       .then(success => {
         if(success){
           console.log('success',success);
-          let user = req.user;
+          let user = success;
   
           let payload = { userId: user._id };
           let token = jwt.sign(payload, process.env.SECRET);
