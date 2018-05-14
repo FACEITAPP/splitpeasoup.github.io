@@ -40,6 +40,7 @@ userRouter.route('/signup')
     let payload = authHeader.split('Basic ')[1];
     let decoded = Buffer.from(payload, 'base64').toString();
     let [username, password] = decoded.split(':');
+    console.log('username upper', username);
   
     if (!username || !password) {
       res.status(400);
@@ -49,22 +50,23 @@ userRouter.route('/signup')
       return;
     }
 
-		let ext = path.extname(req.file.originalname);
-		let params = {
-			ACL: 'public-read',
-			Bucket: process.env.AWS_BUCKET,
-			Key: `${req.file.filename}${ext}`,
-			Body: fs.createReadStream(req.file.path)
-		};
-		let url;
+		// let ext = path.extname(req.file.originalname);
+		// let params = {
+		// 	ACL: 'public-read',
+		// 	Bucket: process.env.AWS_BUCKET,
+		// 	Key: `${req.file.filename}${ext}`,
+		// 	Body: fs.createReadStream(req.file.path)
+		// };
+		let url ='https://faceit-app.s3.amazonaws.com/1e1e36df4f1ef0d181640aac64c7f369.jpg';
 		let photoDb;
 		new Promise((resolve, reject) => {
-			s3.upload(params, (err, s3Data) => {
-				console.log('error', err)
-				url = s3Data.Location;
-				resolve(Photo.create({ url: url }));
-			});
-     
+			// s3.upload(params, (err, s3Data) => {
+			// 	console.log('error', err)
+			// 	url = s3Data.Location;
+			// 	resolve(Photo.create({ url: url }));
+			// });
+      resolve(Photo.create({ url: url }))
+
     })
 			.then(photo => {
 				photoDb = photo;
@@ -73,16 +75,18 @@ userRouter.route('/signup')
 				return results;
 			})
 			.then(results => {
-					console.log("signup req body", req.body)
+          console.log("signup req body", req.body)
+          console.log('username lower', username);
         	return User.create({
-					username: req.body.username,
-					password: req.body.password,
+					username: username,
+					password: password,
 					facetoken: results.body.faces[0].face_token,
 					photo: photoDb
 				});
       })
       .then(success => {
         if(success){
+          console.log('success',success);
           let user = req.user;
   
           let payload = { userId: user._id };
