@@ -10,8 +10,8 @@ signInForm.addEventListener("submit", (event) => {
   const url = signInForm.getAttribute('action');
   const method = signInForm.getAttribute('method');
 
-  let username = 'bob';    // TODO: grab username/pass from form
-  let password = 'marley';
+  let username = newUser.username;    // TODO: grab username/pass from form
+  let password = newUser.password;
   let payload = btoa(username + ':' + password);
 
   console.log("submitting sign in to", method, url);
