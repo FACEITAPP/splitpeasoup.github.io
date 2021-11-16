@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/splitpeasoup/splitpeasoup.github.io#readme",
   "dependencies": {
-    "aws-sdk": "^2.223.1",
+    "aws-sdk": "^2.814.0",
     "bcrypt": "^1.0.3",
     "body-parser": "^1.18.2",
     "btoa": "^1.2.1",
