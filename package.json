@@ -28,7 +28,7 @@
     "btoa": "^1.2.1",
     "dotenv": "^5.0.1",
     "eslint": "^4.19.1",
-    "express": "^4.16.3",
+    "express": "^4.17.3",
     "faker": "^4.1.0",
     "fs": "0.0.1-security",
     "heroku": "^0.2.0",
